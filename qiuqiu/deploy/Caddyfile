@@ -1,0 +1,7 @@
+{$PUSH_DOMAIN} {
+    reverse_proxy gateway:8080
+}
+{$NTFY_DOMAIN} {
+    # Preserve Host, so the Gateway transparently proxies native ntfy routes.
+    reverse_proxy gateway:8080
+}

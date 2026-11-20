@@ -1,0 +1,33 @@
+{
+  "ntfy": {
+    "repository": "https://github.com/binwiederhier/ntfy",
+    "tag": "v2.38.1",
+    "commit": "7d7dc4f2da111464a04feeee113005078d04fe4a",
+    "local_branch": "qiuqiu-v2",
+    "patches": "qiuqiu metadata in publish/cache/FCM; additive cache v18; Firebase keepalive disabled by default",
+    "local_commit": "17ba906b01024a9dd6d8cc07a469281216d07b1f"
+  },
+  "android": {
+    "repository": "https://github.com/binwiederhier/ntfy-android",
+    "tag": "v1.25.2",
+    "commit": "51730a0f06cebfad59f1b7bc0cb6d5c47082b032",
+    "local_branch": "qiuqiu-v2",
+    "patches": "QiuQiu UI, encrypted device credentials, business channels, event-only FCM retrieval, Room v19, disabled legacy background transport",
+    "local_commit": "32437a5ae6f8b9902afabc9514f57543f28a82c2"
+  },
+  "toolchain": {
+    "go": "1.26.0",
+    "jdk": "17.0.21.1+2",
+    "gradle": "9.2.1",
+    "android_compile_sdk": 36,
+    "android_min_sdk": 26,
+    "node": "22",
+    "applicationId": "io.qiuqiu.push"
+  },
+  "github": {
+    "android": "https://github.com/dlaq/qiuqiu-push-android",
+    "backend": "https://github.com/dlaq/qiuqiu-push-server",
+    "product_branch": "main",
+    "upstream_snapshot_branch": "upstream-main"
+  }
+}

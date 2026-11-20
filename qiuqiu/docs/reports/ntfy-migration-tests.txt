@@ -1,0 +1,1 @@
+ok  	heckel.io/ntfy/v2/message	1.386s

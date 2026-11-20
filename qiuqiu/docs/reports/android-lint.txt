@@ -1,0 +1,1128 @@
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_connection_error_dialog.xml:131: Warning: The vertically scrolling ScrollView should not contain another vertically scrolling widget (ScrollView) [NestedScrolling]
+                <ScrollView
+                 ~~~~~~~~~~
+
+   Explanation for issues of type "NestedScrolling":
+   A scrolling widget such as a ScrollView should not contain any nested
+   scrolling widgets since this has various usability issues
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/util/Log.kt:104: Warning: To get local formatting use getDateInstance(), getDateTimeInstance(), or getTimeInstance(), or use new SimpleDateFormat(String template, Locale locale) with for example Locale.US for ASCII dates. [SimpleDateFormat]
+            val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date(e.timestamp))
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/SettingsActivity.kt:672: Warning: To get local formatting use getDateInstance(), getDateTimeInstance(), or getTimeInstance(), or use new SimpleDateFormat(String template, Locale locale) with for example Locale.US for ASCII dates. [SimpleDateFormat]
+                val timestamp = SimpleDateFormat("yyMMdd-HHmm").format(Date())
+                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/SettingsActivity.kt:672: Warning: To get local formatting use getDateInstance(), getDateTimeInstance(), or getTimeInstance(), or use new SimpleDateFormat(String template, Locale locale) with for example Locale.US for ASCII dates. [SimpleDateFormat]
+                val timestamp = SimpleDateFormat("yyMMdd-HHmm").format(Date())
+                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SimpleDateFormat":
+   Almost all callers should use getDateInstance(), getDateTimeInstance(), or
+   getTimeInstance() to get a ready-made instance of SimpleDateFormat suitable
+   for the user's locale. The main reason you'd create an instance this class
+   directly is because you need to format/parse a specific machine-readable
+   format, in which case you almost certainly want to explicitly ask for US to
+   ensure that you get ASCII digits (rather than, say, Arabic digits).
+
+   Therefore, you should either use the form of the SimpleDateFormat
+   constructor where you pass in an explicit locale, such as Locale.US, or use
+   one of the get instance methods, or suppress this error if really know what
+   you are doing.
+
+   https://developer.android.com/reference/java/text/SimpleDateFormat.html
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: Attribute localeConfig is only used in API level 33 and higher (current min is 26) [UnusedAttribute]
+            android:localeConfig="@xml/locales_config"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedAttribute":
+   This check finds attributes set in XML files that were introduced in a
+   version newer than the oldest version targeted by your application (with
+   the minSdkVersion attribute).
+
+   This is not an error; the application will simply ignore the attribute.
+   However, if the attribute is important to the appearance or functionality
+   of your application, you should consider finding an alternative way to
+   achieve the same result with only available attributes, and then you can
+   optionally create a copy of the layout in a layout-vNN folder which will be
+   used on API NN or higher where you can take advantage of the newer
+   attribute.
+
+   Note: This check does not only apply to attributes. For example, some tags
+   can be unused too, such as the new <tag> element in layouts introduced in
+   API 21.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/MainActivity.kt:288: Warning: Use of REQUEST_IGNORE_BATTERY_OPTIMIZATIONS violates the Play Store Content Policy regarding acceptable use cases, as described in https://developer.android.com/training/monitoring-device-state/doze-standby.html [BatteryLife]
+                        Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "BatteryLife":
+   This issue flags code that either
+   * negatively affects battery life, or
+   * uses APIs that have recently changed behavior to prevent background tasks
+   from consuming memory and battery excessively.
+
+   Generally, you should be using WorkManager instead.
+
+   For more details on how to update your code, please see
+   https://developer.android.com/topic/performance/background-optimization
+
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/AddFragment.kt:87: Warning: Avoid passing null as the view root (needed to resolve layout parameters on the inflated layout's root element) [InflateParams]
+        val view = requireActivity().layoutInflater.inflate(R.layout.fragment_add_dialog, null)
+                                                                                          ~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/ClientCertificateFragment.kt:111: Warning: Avoid passing null as the view root (needed to resolve layout parameters on the inflated layout's root element) [InflateParams]
+        val view = requireActivity().layoutInflater.inflate(R.layout.fragment_client_certificate_dialog, null)
+                                                                                                         ~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/ConnectionErrorFragment.kt:69: Warning: Avoid passing null as the view root (needed to resolve layout parameters on the inflated layout's root element) [InflateParams]
+        val view = requireActivity().layoutInflater.inflate(R.layout.fragment_connection_error_dialog, null)
+                                                                                                       ~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/CustomHeaderFragment.kt:67: Warning: Avoid passing null as the view root (needed to resolve layout parameters on the inflated layout's root element) [InflateParams]
+        val view = requireActivity().layoutInflater.inflate(R.layout.fragment_custom_header_dialog, null)
+                                                                                                    ~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/DefaultServerFragment.kt:46: Warning: Avoid passing null as the view root (needed to resolve layout parameters on the inflated layout's root element) [InflateParams]
+        val view = requireActivity().layoutInflater.inflate(R.layout.fragment_default_server_dialog, null)
+                                                                                                     ~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/DetailAdapter.kt:267: Warning: Avoid passing null as the view root (needed to resolve layout parameters on the inflated layout's root element) [InflateParams]
+            val button = LayoutInflater.from(context).inflate(R.layout.button_action, null) as MaterialButton
+                                                                                      ~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/PublishFragment.kt:173: Warning: Avoid passing null as the view root (needed to resolve layout parameters on the inflated layout's root element) [InflateParams]
+        val view = requireActivity().layoutInflater.inflate(R.layout.fragment_publish_dialog, null)
+                                                                                              ~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/TrustedCertificateFragment.kt:124: Warning: Avoid passing null as the view root (needed to resolve layout parameters on the inflated layout's root element) [InflateParams]
+        val view = requireActivity().layoutInflater.inflate(R.layout.fragment_trusted_certificate_dialog, null)
+                                                                                                          ~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/UserFragment.kt:70: Warning: Avoid passing null as the view root (needed to resolve layout parameters on the inflated layout's root element) [InflateParams]
+        val view = requireActivity().layoutInflater.inflate(R.layout.fragment_user_dialog, null)
+                                                                                           ~~~~
+
+   Explanation for issues of type "InflateParams":
+   When inflating a layout, avoid passing in null as the parent view, since
+   otherwise any layout parameters on the root of the inflated layout will be
+   ignored.
+
+   https://www.bignerdranch.com/blog/understanding-androids-layoutinflater-inflate/
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/gradle/wrapper/gradle-wrapper.properties:3: Warning: A newer version of Gradle than 9.2.1 is available: 9.9.2 [AndroidGradlePluginVersion]
+distributionUrl=https\://services.gradle.org/distributions/gradle-9.2.1-bin.zip
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "AndroidGradlePluginVersion":
+   This detector looks for usage of the Android Gradle Plugin where the
+   version you are using is not the current stable release. Using older
+   versions is fine, and there are cases where you deliberately want to stick
+   with an older version. However, you may simply not be aware that a more
+   recent version is available, and that is what this lint check helps find.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_connection_error_dialog.xml:62: Warning: android:editable is deprecated: Use an <EditText> to make it editable [Deprecated]
+                    android:editable="false" />
+                    ~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "Deprecated":
+   Deprecated views, attributes and so on are deprecated because there is a
+   better way to do something. Do it that new way. You've been warned.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_main.xml:253: Warning: Use app:drawableStartCompat instead of android:drawableStart [UseCompatTextViewDrawableXml from androidx.appcompat]
+                android:drawableStart="@drawable/ic_wifi_off_gray_24dp"
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UseCompatTextViewDrawableXml":
+   TextView uses android: compound drawable attributes instead of app: ones
+
+   Vendor: Android Open Source Project
+   Identifier: androidx.appcompat
+   Feedback: https://issuetracker.google.com/issues/new?component=460343
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values-es/strings.xml:154: Warning: "Despues" is a common misspelling; did you mean "Después"? [Typos]
+    <string name="settings_notifications_auto_delete_three_days">Despues de 3 dias</string>
+                                                                 ~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values-es/strings.xml:154: Warning: "dias" is a common misspelling; did you mean "días"? [Typos]
+    <string name="settings_notifications_auto_delete_three_days">Despues de 3 dias</string>
+                                                                              ~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values-pt/strings.xml:184: Warning: "raíz" is a common misspelling; did you mean "raiz"? [Typos]
+    <string name="default_server_dialog_description">Insira o URL raíz do servidor para utilizar seu próprio como padrão ao subscrever novos tópicos e/ou partilhar em tópicos.</string>
+                                                                  ~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values-es/strings.xml:402: Warning: "tunel" is a common misspelling; did you mean "túnel"? [Typos]
+    <string name="settings_advanced_custom_headers_summary">Define cabeceras HTTP personalizadas que se enviarán con cada petición, p.e. si tu servidor ntfy está tras un proxy o tunel con autentificación.</string>
+                                                                                                                                                                                  ~~~~~
+
+   Explanation for issues of type "Typos":
+   This check looks through the string definitions, and if it finds any words
+   that look like likely misspellings, they are flagged.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:43: Warning: Formatting %d followed by words ("instant"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="channel_subscriber_notification_instant_text_more">Subscribed to %1$d instant delivery topics</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:51: Warning: Formatting %d followed by words ("topics"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="channel_subscriber_notification_noinstant_text_more">Subscribed to %1$d topics</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:55: Warning: Formatting %d followed by words ("minutes"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="connection_alert_text_one">Unable to connect to %1$s for more than %2$d minutes. Check your network connection.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:56: Warning: Formatting %d followed by words ("servers"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="connection_alert_text_multiple">Unable to connect to %1$d servers for more than %2$d minutes. Check your network connection.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:64: Warning: Formatting %d followed by words ("notification"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="refresh_message_result">%1$d notification(s) received</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:66: Warning: Formatting %d followed by words ("subscriptions"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="refresh_message_error">Could not refresh %1$d subscriptions\n\n%2$s</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:90: Warning: Formatting %d followed by words ("notification"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="main_item_status_text_one">%1$d notification</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:91: Warning: Formatting %d followed by words ("notifications"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="main_item_status_text_not_one">%1$d notifications</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:171: Warning: Formatting %d followed by words ("priority"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="detail_test_message">This is a test notification from the ntfy Android app. It has a level %1$d priority.
+    ^
+
+   Explanation for issues of type "PluralsCandidate":
+   This lint check looks for potential errors in internationalization where
+   you have translated a message which involves a quantity and it looks like
+   other parts of the string may need grammatical changes.
+
+   For example, rather than something like this:
+     <string name="try_again">Try again in %d seconds.</string>
+   you should be using a plural:
+      <plurals name="try_again">
+           <item quantity="one">Try again in %d second</item>
+           <item quantity="other">Try again in %d seconds</item>
+       </plurals>
+   This will ensure that in other languages the right set of translations are
+   provided for the different quantity classes.
+
+   (This check depends on some heuristics, so it may not accurately determine
+   whether a string really should be a quantity. You can use tools:ignore to
+   filter out false positives.
+
+   https://developer.android.com/guide/topics/resources/string-resource.html#Plurals
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language af (Afrikaans) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language ar (Arabic) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language bn (Bangla) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language cu (Church Slavic; Old Slavonic; Church Slavonic; Old Bulgarian; Old Church Slavonic) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language cy (Welsh) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language da (Danish) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language el (Greek) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language eo (Esperanto) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language fa (Persian) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language hi (Hindi) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language hr (Croatian) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language hu (Hungarian) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language mk (Macedonian) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language ms (Malay) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language sl (Slovenian) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language te (Telugu) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language th (Thai) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:29: Warning: The language xh (Xhosa) is present in this project, but not declared in the localeConfig resource [UnusedTranslation]
+            android:localeConfig="@xml/locales_config"
+                                  ~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedTranslation":
+   If an application defines a translation for a language which is not
+   included in the app's localeConfig file (when declared in the manifest),
+   that language will be "unused"; it will not be presented to the user.
+   Usually this means you have forgotten to include it in the locale config
+   file.
+
+   https://developer.android.com/about/versions/13/features/app-languages
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/service/SubscriberService.kt:511: Warning: This broadcast receiver declares an intent-filter for a protected broadcast action string, which can only be sent by the system, not third-party applications. However, the receiver's onReceive method does not appear to call getAction to ensure that the received Intent's action string matches the expected value, potentially making it possible for another actor to send a spoofed intent with no action string or a different action string and cause undesired behavior. [UnsafeProtectedBroadcastReceiver]
+        override fun onReceive(context: Context, intent: Intent) {
+                     ~~~~~~~~~
+
+   Explanation for issues of type "UnsafeProtectedBroadcastReceiver":
+   `BroadcastReceiver`s that declare an intent-filter for a
+   protected-broadcast action string must check that the received intent's
+   action string matches the expected value, otherwise it is possible for
+   malicious actors to spoof intents.
+
+   https://goo.gle/UnsafeProtectedBroadcastReceiver
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/xml/network_security_config.xml:5: Warning: The Network Security Configuration allows the use of user certificates in the release version of your app [AcceptsUserCertificates]
+            <certificates src="user"/>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "AcceptsUserCertificates":
+   Allowing user certificates could allow eavesdroppers to intercept data sent
+   by your app, which could impact the privacy of your users. Consider nesting
+   your app's trust-anchors inside a <debug-overrides> element to make sure
+   they are only available when android:debuggable is set to true.
+
+   https://goo.gle/AcceptsUserCertificates
+   https://developer.android.com/training/articles/security-config#TrustingDebugCa
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:144: Warning: Exported receiver does not require permission [ExportedReceiver]
+        <receiver
+         ~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:154: Warning: Exported receiver does not require permission [ExportedReceiver]
+        <receiver
+         ~~~~~~~~
+
+   Explanation for issues of type "ExportedReceiver":
+   Exported receivers (receivers which either set exported=true or contain an
+   intent-filter and do not specify exported=false) should define a permission
+   that an entity must have in order to launch the receiver or bind to it.
+   Without this, any application can use this receiver.
+
+   https://goo.gle/ExportedReceiver
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/xml/network_security_config.xml:3: Warning: Insecure Base Configuration [InsecureBaseConfiguration]
+    <base-config cleartextTrafficPermitted="true">
+                                            ~~~~
+
+   Explanation for issues of type "InsecureBaseConfiguration":
+   Permitting cleartext traffic could allow eavesdroppers to intercept data
+   sent by your app, which impacts the privacy of your users. Consider only
+   allowing encrypted traffic by setting the cleartextTrafficPermitted tag to
+   false.
+
+   https://goo.gle/InsecureBaseConfiguration
+   https://developer.android.com/preview/features/security-config.html
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/AndroidManifest.xml:22: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
+            android:allowBackup="false"
+                                 ~~~~~
+
+   Explanation for issues of type "DataExtractionRules":
+   Before Android 12, the attributes android:allowBackup and
+   android:fullBackupContent were used to configure all forms of backup,
+   including cloud backups, device-to-device transfers and adb backup.
+
+   In Android 12 and higher, these attributes have been deprecated and will
+   only apply to cloud backups. You should instead use the attribute
+   android:dataExtractionRules, specifying an @xml resource that configures
+   which files to back up, for cloud backups and for device-to-device
+   transfers, separately. If your minSdkVersion supports older versions,
+   you'll still want to specify an android:fullBackupContent resource if the
+   default behavior is not right for your app.
+
+   https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   https://goo.gle/DataExtractionRules
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/up/BroadcastReceiver.kt:153: Warning: Unnecessary; SDK_INT is always >= 34 [ObsoleteSdkInt]
+            return if (Build.VERSION.SDK_INT >= 33) {
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/up/RaiseAppToForeground.kt:126: Warning: Unnecessary; SDK_INT is always >= 26 [ObsoleteSdkInt]
+    private val foregroundImportance = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/mipmap-anydpi-v26: Warning: This folder configuration (v26) is unnecessary; minSdkVersion is 26. Merge all the resources in this folder into mipmap-anydpi. [ObsoleteSdkInt]
+
+   Explanation for issues of type "ObsoleteSdkInt":
+   This check flags version checks that are not necessary, because the
+   minSdkVersion (or surrounding known API level) is already at least as high
+   as the version checked for.
+
+   Similarly, it also looks for resources in -vNN folders, such as values-v14
+   where the version qualifier is less than or equal to the minSdkVersion,
+   where the contents should be merged into the best folder.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_client_certificate_dialog.xml:97: Warning: This tag and its children can be replaced by one <TextView/> and a compound drawable [UseCompoundDrawables]
+                <LinearLayout
+                 ~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_publish_dialog.xml:393: Warning: This tag and its children can be replaced by one <TextView/> and a compound drawable [UseCompoundDrawables]
+                <LinearLayout
+                 ~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/item_priority_dropdown.xml:2: Warning: This tag and its children can be replaced by one <TextView/> and a compound drawable [UseCompoundDrawables]
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ ~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/view_attachment_box.xml:10: Warning: This tag and its children can be replaced by one <TextView/> and a compound drawable [UseCompoundDrawables]
+    <LinearLayout
+     ~~~~~~~~~~~~
+
+   Explanation for issues of type "UseCompoundDrawables":
+   A LinearLayout which contains an ImageView and a TextView can be more
+   efficiently handled as a compound drawable (a single TextView, using the
+   drawableTop, drawableLeft, drawableRight and/or drawableBottom attributes
+   to draw one or more images adjacent to the text).
+
+   If the two widgets are offset from each other with margins, this can be
+   replaced with a drawablePadding attribute.
+
+   There's a lint quickfix to perform this conversion in the Eclipse plugin.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:27: Warning: The resource R.color.md_theme_scrim appears to be unused [UnusedResources]
+    <color name="md_theme_scrim">#000000</color>
+           ~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:50: Warning: The resource R.color.md_theme_primary_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_primary_mediumContrast">#003E34</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:51: Warning: The resource R.color.md_theme_onPrimary_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onPrimary_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:52: Warning: The resource R.color.md_theme_primaryContainer_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_primaryContainer_mediumContrast">#237A69</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:53: Warning: The resource R.color.md_theme_onPrimaryContainer_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onPrimaryContainer_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:54: Warning: The resource R.color.md_theme_secondary_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_secondary_mediumContrast">#233B35</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:55: Warning: The resource R.color.md_theme_onSecondary_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSecondary_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:56: Warning: The resource R.color.md_theme_secondaryContainer_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_secondaryContainer_mediumContrast">#59726B</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:57: Warning: The resource R.color.md_theme_onSecondaryContainer_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSecondaryContainer_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:58: Warning: The resource R.color.md_theme_tertiary_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_tertiary_mediumContrast">#18394E</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:59: Warning: The resource R.color.md_theme_onTertiary_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onTertiary_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:60: Warning: The resource R.color.md_theme_tertiaryContainer_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_tertiaryContainer_mediumContrast">#517187</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:61: Warning: The resource R.color.md_theme_onTertiaryContainer_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onTertiaryContainer_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:62: Warning: The resource R.color.md_theme_error_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_error_mediumContrast">#740006</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:63: Warning: The resource R.color.md_theme_onError_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onError_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:64: Warning: The resource R.color.md_theme_errorContainer_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_errorContainer_mediumContrast">#CF2C27</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:65: Warning: The resource R.color.md_theme_onErrorContainer_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onErrorContainer_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:66: Warning: The resource R.color.md_theme_background_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_background_mediumContrast">#F5FBF7</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:67: Warning: The resource R.color.md_theme_onBackground_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onBackground_mediumContrast">#171D1B</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:68: Warning: The resource R.color.md_theme_surface_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surface_mediumContrast">#F5FBF7</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:69: Warning: The resource R.color.md_theme_onSurface_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSurface_mediumContrast">#0C1211</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:70: Warning: The resource R.color.md_theme_surfaceVariant_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceVariant_mediumContrast">#DBE5E0</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:71: Warning: The resource R.color.md_theme_onSurfaceVariant_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSurfaceVariant_mediumContrast">#2F3835</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:72: Warning: The resource R.color.md_theme_outline_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_outline_mediumContrast">#4B5551</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:73: Warning: The resource R.color.md_theme_outlineVariant_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_outlineVariant_mediumContrast">#656F6C</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:74: Warning: The resource R.color.md_theme_scrim_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_scrim_mediumContrast">#000000</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:75: Warning: The resource R.color.md_theme_inverseSurface_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_inverseSurface_mediumContrast">#2B3230</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:76: Warning: The resource R.color.md_theme_inverseOnSurface_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_inverseOnSurface_mediumContrast">#ECF2EF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:77: Warning: The resource R.color.md_theme_inversePrimary_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_inversePrimary_mediumContrast">#84D6C2</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:78: Warning: The resource R.color.md_theme_primaryFixed_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_primaryFixed_mediumContrast">#237A69</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:79: Warning: The resource R.color.md_theme_onPrimaryFixed_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onPrimaryFixed_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:80: Warning: The resource R.color.md_theme_primaryFixedDim_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_primaryFixedDim_mediumContrast">#006051</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:81: Warning: The resource R.color.md_theme_onPrimaryFixedVariant_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onPrimaryFixedVariant_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:82: Warning: The resource R.color.md_theme_secondaryFixed_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_secondaryFixed_mediumContrast">#59726B</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:83: Warning: The resource R.color.md_theme_onSecondaryFixed_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSecondaryFixed_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:84: Warning: The resource R.color.md_theme_secondaryFixedDim_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_secondaryFixedDim_mediumContrast">#415A53</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:85: Warning: The resource R.color.md_theme_onSecondaryFixedVariant_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSecondaryFixedVariant_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:86: Warning: The resource R.color.md_theme_tertiaryFixed_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_tertiaryFixed_mediumContrast">#517187</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:87: Warning: The resource R.color.md_theme_onTertiaryFixed_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onTertiaryFixed_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:88: Warning: The resource R.color.md_theme_tertiaryFixedDim_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_tertiaryFixedDim_mediumContrast">#39586E</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:89: Warning: The resource R.color.md_theme_onTertiaryFixedVariant_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onTertiaryFixedVariant_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:90: Warning: The resource R.color.md_theme_surfaceDim_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceDim_mediumContrast">#C1C8C5</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:91: Warning: The resource R.color.md_theme_surfaceBright_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceBright_mediumContrast">#F5FBF7</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:92: Warning: The resource R.color.md_theme_surfaceContainerLowest_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceContainerLowest_mediumContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:93: Warning: The resource R.color.md_theme_surfaceContainerLow_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceContainerLow_mediumContrast">#EFF5F1</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:94: Warning: The resource R.color.md_theme_surfaceContainer_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceContainer_mediumContrast">#E3EAE6</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:95: Warning: The resource R.color.md_theme_surfaceContainerHigh_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceContainerHigh_mediumContrast">#D8DEDB</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:96: Warning: The resource R.color.md_theme_surfaceContainerHighest_mediumContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceContainerHighest_mediumContrast">#CDD3D0</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:97: Warning: The resource R.color.md_theme_primary_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_primary_highContrast">#00332A</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:98: Warning: The resource R.color.md_theme_onPrimary_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onPrimary_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:99: Warning: The resource R.color.md_theme_primaryContainer_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_primaryContainer_highContrast">#005346</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:100: Warning: The resource R.color.md_theme_onPrimaryContainer_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onPrimaryContainer_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:101: Warning: The resource R.color.md_theme_secondary_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_secondary_highContrast">#18302B</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:102: Warning: The resource R.color.md_theme_onSecondary_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSecondary_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:103: Warning: The resource R.color.md_theme_secondaryContainer_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_secondaryContainer_highContrast">#364E47</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:104: Warning: The resource R.color.md_theme_onSecondaryContainer_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSecondaryContainer_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:105: Warning: The resource R.color.md_theme_tertiary_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_tertiary_highContrast">#0B2F43</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:106: Warning: The resource R.color.md_theme_onTertiary_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onTertiary_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:107: Warning: The resource R.color.md_theme_tertiaryContainer_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_tertiaryContainer_highContrast">#2D4D62</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:108: Warning: The resource R.color.md_theme_onTertiaryContainer_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onTertiaryContainer_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:109: Warning: The resource R.color.md_theme_error_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_error_highContrast">#600004</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:110: Warning: The resource R.color.md_theme_onError_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onError_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:111: Warning: The resource R.color.md_theme_errorContainer_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_errorContainer_highContrast">#98000A</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:112: Warning: The resource R.color.md_theme_onErrorContainer_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onErrorContainer_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:113: Warning: The resource R.color.md_theme_background_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_background_highContrast">#F5FBF7</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:114: Warning: The resource R.color.md_theme_onBackground_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onBackground_highContrast">#171D1B</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:115: Warning: The resource R.color.md_theme_surface_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surface_highContrast">#F5FBF7</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:116: Warning: The resource R.color.md_theme_onSurface_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSurface_highContrast">#000000</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:117: Warning: The resource R.color.md_theme_surfaceVariant_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceVariant_highContrast">#DBE5E0</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:118: Warning: The resource R.color.md_theme_onSurfaceVariant_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSurfaceVariant_highContrast">#000000</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:119: Warning: The resource R.color.md_theme_outline_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_outline_highContrast">#252E2B</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:120: Warning: The resource R.color.md_theme_outlineVariant_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_outlineVariant_highContrast">#424B48</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:121: Warning: The resource R.color.md_theme_scrim_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_scrim_highContrast">#000000</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:122: Warning: The resource R.color.md_theme_inverseSurface_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_inverseSurface_highContrast">#2B3230</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:123: Warning: The resource R.color.md_theme_inverseOnSurface_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_inverseOnSurface_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:124: Warning: The resource R.color.md_theme_inversePrimary_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_inversePrimary_highContrast">#84D6C2</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:125: Warning: The resource R.color.md_theme_primaryFixed_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_primaryFixed_highContrast">#005346</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:126: Warning: The resource R.color.md_theme_onPrimaryFixed_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onPrimaryFixed_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:127: Warning: The resource R.color.md_theme_primaryFixedDim_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_primaryFixedDim_highContrast">#003A30</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:128: Warning: The resource R.color.md_theme_onPrimaryFixedVariant_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onPrimaryFixedVariant_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:129: Warning: The resource R.color.md_theme_secondaryFixed_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_secondaryFixed_highContrast">#364E47</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:130: Warning: The resource R.color.md_theme_onSecondaryFixed_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSecondaryFixed_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:131: Warning: The resource R.color.md_theme_secondaryFixedDim_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_secondaryFixedDim_highContrast">#1F3731</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:132: Warning: The resource R.color.md_theme_onSecondaryFixedVariant_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onSecondaryFixedVariant_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:133: Warning: The resource R.color.md_theme_tertiaryFixed_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_tertiaryFixed_highContrast">#2D4D62</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:134: Warning: The resource R.color.md_theme_onTertiaryFixed_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onTertiaryFixed_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:135: Warning: The resource R.color.md_theme_tertiaryFixedDim_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_tertiaryFixedDim_highContrast">#14364A</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:136: Warning: The resource R.color.md_theme_onTertiaryFixedVariant_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_onTertiaryFixedVariant_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:137: Warning: The resource R.color.md_theme_surfaceDim_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceDim_highContrast">#B4BAB7</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:138: Warning: The resource R.color.md_theme_surfaceBright_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceBright_highContrast">#F5FBF7</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:139: Warning: The resource R.color.md_theme_surfaceContainerLowest_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceContainerLowest_highContrast">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:140: Warning: The resource R.color.md_theme_surfaceContainerLow_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceContainerLow_highContrast">#ECF2EF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:141: Warning: The resource R.color.md_theme_surfaceContainer_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceContainer_highContrast">#DEE4E0</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:142: Warning: The resource R.color.md_theme_surfaceContainerHigh_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceContainerHigh_highContrast">#CFD6D2</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:143: Warning: The resource R.color.md_theme_surfaceContainerHighest_highContrast appears to be unused [UnusedResources]
+    <color name="md_theme_surfaceContainerHighest_highContrast">#C1C8C5</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:153: Warning: The resource R.color.abc_decor_view_status_guard appears to be unused [UnusedResources]
+    <color name="abc_decor_view_status_guard" tools:override="true">@android:color/transparent</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/colors.xml:154: Warning: The resource R.color.abc_decor_view_status_guard_light appears to be unused [UnusedResources]
+    <color name="abc_decor_view_status_guard_light" tools:override="true">@android:color/transparent</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/drawable/ic_bolt_outline_white_24dp.xml:1: Warning: The resource R.drawable.ic_bolt_outline_white_24dp appears to be unused [UnusedResources]
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+^
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/drawable/ic_bolt_white_24dp.xml:1: Warning: The resource R.drawable.ic_bolt_white_24dp appears to be unused [UnusedResources]
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+^
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/mipmap-hdpi/ic_launcher_background.png: Warning: The resource R.mipmap.ic_launcher_background appears to be unused [UnusedResources]
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/ic_launcher_background.xml:3: Warning: The resource R.color.ic_launcher_background appears to be unused [UnusedResources]
+    <color name="ic_launcher_background">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png: Warning: The resource R.mipmap.ic_launcher_foreground appears to be unused [UnusedResources]
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/drawable/ic_launcher_monochrome.xml:1: Warning: The resource R.drawable.ic_launcher_monochrome appears to be unused [UnusedResources]
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+^
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml:2: Warning: The resource R.mipmap.ic_launcher_round appears to be unused [UnusedResources]
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+^
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/drawable/ic_send_gray_24dp.xml:1: Warning: The resource R.drawable.ic_send_gray_24dp appears to be unused [UnusedResources]
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+^
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/drawable/ic_warning_gray_24dp.xml:1: Warning: The resource R.drawable.ic_warning_gray_24dp appears to be unused [UnusedResources]
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+^
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:104: Warning: The resource R.string.main_unified_push_toast appears to be unused [UnusedResources]
+    <string name="main_unified_push_toast">This subscription is managed by %1$s via UnifiedPush</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:137: Warning: The resource R.string.add_dialog_button_cancel appears to be unused [UnusedResources]
+    <string name="add_dialog_button_cancel">Cancel</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:139: Warning: The resource R.string.add_dialog_button_back appears to be unused [UnusedResources]
+    <string name="add_dialog_button_back">Back</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:141: Warning: The resource R.string.add_dialog_error_connection_failed appears to be unused [UnusedResources]
+    <string name="add_dialog_error_connection_failed">Connection failed: %1$s</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:147: Warning: The resource R.string.add_dialog_login_new_user appears to be unused [UnusedResources]
+    <string name="add_dialog_login_new_user">New user</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:178: Warning: The resource R.string.detail_instant_delivery_enabled appears to be unused [UnusedResources]
+    <string name="detail_instant_delivery_enabled">Instant delivery on</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:179: Warning: The resource R.string.detail_instant_delivery_disabled appears to be unused [UnusedResources]
+    <string name="detail_instant_delivery_disabled">Instant delivery off</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:215: Warning: The resource R.string.detail_menu_enable_instant appears to be unused [UnusedResources]
+    <string name="detail_menu_enable_instant">Enable instant delivery</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:216: Warning: The resource R.string.detail_menu_disable_instant appears to be unused [UnusedResources]
+    <string name="detail_menu_disable_instant">Turn off instant delivery</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:298: Warning: The resource R.string.notification_dialog_cancel appears to be unused [UnusedResources]
+    <string name="notification_dialog_cancel">Cancel</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/strings.xml:528: Warning: The resource R.string.user_dialog_button_cancel appears to be unused [UnusedResources]
+    <string name="user_dialog_button_cancel">Cancel</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/values/values.xml:13: Warning: The resource R.string.main_menu_donate_url appears to be unused [UnusedResources]
+    <string name="main_menu_donate_url" translatable="false">https://github.com/sponsors/binwiederhier</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedResources":
+   Unused resources make applications larger and slow down builds.
+
+
+   The unused resource check can ignore tests. If you want to include
+   resources that are only referenced from tests, consider packaging them in a
+   test source set instead.
+
+   You can include test sources in the unused resource check by setting the
+   system property lint.unused-resources.include-tests =true, and to exclude
+   them (usually for performance reasons), use
+   lint.unused-resources.exclude-tests =true.
+   ,
+
+   Available options:
+
+   **skip-libraries** (default is true):
+   Whether the unused resource check should skip reporting unused resources in libraries.
+
+   Many libraries will declare resources that are part of the library surface; other modules depending on the library will also reference the resources. To avoid reporting all these resources as unused (in the context of a library), the unused resource check normally skips reporting unused resources in libraries. Instead, run the unused resource check on the consuming app module (along with `checkDependencies=true`).
+
+   However, there are cases where you want to check that all the resources declared in a library are used; in that case, you can disable the skip option.
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UnusedResources">
+           <option name="skip-libraries" value="true" />
+       </issue>
+   </lint>
+   ```
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_publish_dialog.xml:50: Warning: This ScrollView layout or its LinearLayout parent is possibly unnecessary [UselessParent]
+        <ScrollView
+         ~~~~~~~~~~
+
+   Explanation for issues of type "UselessParent":
+   A layout with children that has no siblings, is not a scrollview or a root
+   layout, and does not have a background, can be removed and have its
+   children moved directly into the parent for a flatter and more efficient
+   layout hierarchy.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_connection_error_dialog.xml:147: Warning: Avoid using sizes smaller than 11sp: 10sp [SmallSp]
+                        android:textSize="10sp" />
+                        ~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_main_item.xml:81: Warning: Avoid using sizes smaller than 11sp: 10sp [SmallSp]
+            android:textSize="10sp" android:textStyle="bold"/>
+            ~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SmallSp":
+   Avoid using sizes smaller than 11sp.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/menu/menu_client_certificate_dialog.xml:8: Warning: Prefer "ifRoom" instead of "always" [AlwaysShowAction]
+        app:showAsAction="always" />
+        ~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/menu/menu_connection_error_dialog.xml:8: Warning: Prefer "ifRoom" instead of "always" [AlwaysShowAction]
+        app:showAsAction="always" />
+        ~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/menu/menu_custom_header_dialog.xml:8: Warning: Prefer "ifRoom" instead of "always" [AlwaysShowAction]
+        app:showAsAction="always" />
+        ~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/menu/menu_default_server_dialog.xml:8: Warning: Prefer "ifRoom" instead of "always" [AlwaysShowAction]
+        app:showAsAction="always" />
+        ~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/menu/menu_trusted_certificate_dialog.xml:8: Warning: Prefer "ifRoom" instead of "always" [AlwaysShowAction]
+        app:showAsAction="always" />
+        ~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/menu/menu_user_dialog.xml:8: Warning: Prefer "ifRoom" instead of "always" [AlwaysShowAction]
+        app:showAsAction="always" />
+        ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "AlwaysShowAction":
+   Using showAsAction="always" in menu XML, or MenuItem.SHOW_AS_ACTION_ALWAYS
+   in Java code is usually a deviation from the user interface style guide.Use
+   ifRoom or the corresponding MenuItem.SHOW_AS_ACTION_IF_ROOM instead.
+
+   If always is used sparingly there are usually no problems and behavior is
+   roughly equivalent to ifRoom but with preference over other ifRoom items.
+   Using it more than twice in the same menu is a bad idea.
+
+   This check looks for menu XML files that contain more than two always
+   actions, or some always actions and no ifRoom actions. In Java code, it
+   looks for projects that contain references to
+   MenuItem.SHOW_AS_ACTION_ALWAYS and no references to
+   MenuItem.SHOW_AS_ACTION_IF_ROOM.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/qiuqiu/LinkActivity.kt:8: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+class LinkActivity:Activity(){override fun onCreate(state:Bundle?){super.onCreate(state);val uri=Uri.parse(intent.getStringExtra("url")?:"");if(QiuQiuChannels.allowedUrl(this,uri)){try{startActivity(Intent(Intent.ACTION_VIEW,uri));finish();return}catch(_:Exception){}}
+                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/qiuqiu/QiuQiuActivity.kt:107: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+        button(c,"保存并测试连接"){task {val base=validBase(url.text.toString());withContext(Dispatchers.IO){val req=Request.Builder().url("$base/healthz").build();http.newCall(req).execute().use {if(!it.isSuccessful)throw IllegalStateException("服务器连接失败")}};prefs.edit().putString("push_url",base).apply()}}
+                                                                                                                                                                                                                                                           ~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/qiuqiu/QiuQiuActivity.kt:116: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+            prefs.edit().putString("ntfy_url",ntfy).putString("device_id",result.get("device_id").asString).putString("uid",result.get("user_id").asString).apply()
+            ~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/qiuqiu/QiuQiuActivity.kt:150: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+        if(n.click.isNotBlank())dialog.setPositiveButton("打开链接"){_,_->val uri=Uri.parse(n.click);if(QiuQiuChannels.allowedUrl(this,uri)){try{startActivity(Intent(Intent.ACTION_VIEW,uri))}catch(_:Exception){Toast.makeText(this,"没有可打开此链接的应用",Toast.LENGTH_SHORT).show()}}else Toast.makeText(this,"此链接协议未允许，请在业务设置中配置",Toast.LENGTH_LONG).show()}
+                                                                              ~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/qiuqiu/QiuQiuActivity.kt:155: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+        for((id,label)in QiuQiuChannels.businesses){val c=card(label);val sound=prefs.getString("sound_$id","default")?:"default";c.addView(text("默认声音配置：$sound",14f,muted));val spinner=Spinner(this);val values=listOf("default","alarm","soft","silent");spinner.adapter=ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,values);spinner.setSelection(values.indexOf(sound).coerceAtLeast(0));c.addView(spinner);button(c,"保存并打开系统渠道设置"){val selected=values[spinner.selectedItemPosition];prefs.edit().putString("sound_$id",selected).apply();val channel=QiuQiuChannels.ensure(this,id,selected,if(id in listOf("server","security","network"))4 else 3);startActivity(Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE,packageName).putExtra(Settings.EXTRA_CHANNEL_ID,channel))}}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/qiuqiu/QiuQiuActivity.kt:156: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+        val c=card("允许的 Deep Link 协议");val schemes=input(c,"例如 myapp,weixin",value=prefs.getString("allowed_schemes","")?:"");c.addView(text("HTTPS 默认允许。仅添加你信任的应用协议，多个协议使用英文逗号分隔。",14f,muted));button(c,"保存协议"){prefs.edit().putString("allowed_schemes",schemes.text.toString()).apply();notice("已保存")}
+                                                                                                                                                                                                                 ~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/qiuqiu/QiuQiuActivity.kt:169: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+    private fun about(){val c=card("球球推送 QiuQiu Push");c.addView(text("版本 ${BuildConfig.VERSION_NAME}\n基于 ntfy Android v1.25.2\nFCM 是唯一后台推送通道。\n流体云：尚未完成 Find N5 实机验证。",15f));button(c,"查看 ntfy 开源项目与许可"){startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://github.com/binwiederhier/ntfy-android")))};val license=assets.open("qiuqiu-licenses.txt").bufferedReader().use{it.readText()};card("开源许可").addView(text(license,13f,muted))}
+                                                                                                                                                                                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/qiuqiu/QiuQiuActivity.kt:170: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+    private fun validBase(raw:String):String {val value=raw.trim().trimEnd('/');val uri=Uri.parse(value);require(uri.scheme=="https"&&!uri.host.isNullOrEmpty()&&uri.userInfo==null&&uri.query==null&&uri.fragment==null&&(uri.path.isNullOrEmpty()||uri.path=="/")){"服务器地址必须是 HTTPS 根地址"};return value}
+                                                                                        ~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/qiuqiu/QiuQiuChannels.kt:35: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+        val uri=when(sound){"silent"->null;"alarm"->Uri.parse("android.resource://${context.packageName}/${R.raw.qiuqiu_alarm}");"soft"->Uri.parse("android.resource://${context.packageName}/${R.raw.qiuqiu_soft}");else->RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)}
+                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/qiuqiu/QiuQiuChannels.kt:35: Warning: Use the KTX extension function String.toUri instead? [UseKtx]
+        val uri=when(sound){"silent"->null;"alarm"->Uri.parse("android.resource://${context.packageName}/${R.raw.qiuqiu_alarm}");"soft"->Uri.parse("android.resource://${context.packageName}/${R.raw.qiuqiu_soft}");else->RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)}
+                                                                                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UseKtx":
+   The Android KTX libraries decorates the Android platform SDK as well as
+   various libraries with more convenient extension functions available from
+   Kotlin, allowing you to use default parameters, named parameters, and
+   more.
+
+   Available options:
+
+   **remove-defaults** (default is true):
+   Whether to skip arguments that match the defaults provided by the extension.
+
+   Extensions often provide default values for some of the parameters. For example:
+   ```kotlin
+   fun Path.readLines(charset: Charset = Charsets.UTF_8): List<String> { return Files.readAllLines(this, charset) }
+   ```
+   This lint check will by default automatically omit parameters that match the default, so if your code was calling
+
+   ```kotlin
+   Files.readAllLines(file, Charset.UTF_8)
+   ```
+   lint would replace this with
+   ```kotlin
+   file.readLines()
+   ```
+   rather than
+
+   ```kotlin
+   file.readLines(Charset.UTF_8
+   ```
+   You can turn this behavior off using this option.
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UseKtx">
+           <option name="remove-defaults" value="true" />
+       </issue>
+   </lint>
+   ```
+
+   **require-present** (default is true):
+   Whether to only offer extensions already available.
+
+   This option lets you only have lint suggest extension replacements if those extensions are already available on the class path (in other words, you're already depending on the library containing the extension method.)
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UseKtx">
+           <option name="require-present" value="true" />
+       </issue>
+   </lint>
+   ```
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_detail.xml:56: Warning: Missing contentDescription attribute on image [ContentDescription]
+        <ImageView
+         ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_main.xml:37: Warning: Missing contentDescription attribute on image [ContentDescription]
+                <ImageView
+                 ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_main.xml:112: Warning: Missing contentDescription attribute on image [ContentDescription]
+                <ImageView
+                 ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_main.xml:180: Warning: Missing contentDescription attribute on image [ContentDescription]
+                <ImageView
+                 ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_main.xml:285: Warning: Missing contentDescription attribute on image [ContentDescription]
+            <ImageView
+             ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_share.xml:68: Warning: Missing contentDescription attribute on image [ContentDescription]
+            <ImageView
+             ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_share.xml:174: Warning: Missing contentDescription attribute on image [ContentDescription]
+        <ImageView
+         ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_add_dialog.xml:173: Warning: Missing contentDescription attribute on image [ContentDescription]
+                    <ImageView
+                     ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_add_dialog.xml:209: Warning: Missing contentDescription attribute on image [ContentDescription]
+                <ImageView
+                 ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_add_dialog.xml:312: Warning: Missing contentDescription attribute on image [ContentDescription]
+                <ImageView
+                 ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_connection_error_dialog.xml:108: Warning: Missing contentDescription attribute on image [ContentDescription]
+            <ImageView
+             ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:49: Warning: Missing contentDescription attribute on image [ContentDescription]
+        <ImageButton
+         ~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:78: Warning: Missing contentDescription attribute on image [ContentDescription]
+        <ImageView
+         ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:115: Warning: Missing contentDescription attribute on image [ContentDescription]
+            <ImageView
+             ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:193: Warning: Missing contentDescription attribute on image [ContentDescription]
+        <ImageView
+         ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_main_item.xml:10: Warning: Missing contentDescription attribute on image [ContentDescription]
+    <ImageView
+     ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_main_item.xml:34: Warning: Missing contentDescription attribute on image [ContentDescription]
+    <ImageView
+     ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_main_item.xml:42: Warning: Missing contentDescription attribute on image [ContentDescription]
+    <ImageView
+     ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_main_item.xml:49: Warning: Missing contentDescription attribute on image [ContentDescription]
+    <ImageView
+     ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_main_item.xml:56: Warning: Missing contentDescription attribute on image [ContentDescription]
+    <ImageView
+     ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_publish_dialog.xml:400: Warning: Missing contentDescription attribute on image [ContentDescription]
+                    <ImageView
+                     ~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_share_item.xml:10: Warning: Missing contentDescription attribute on image [ContentDescription]
+    <ImageView
+     ~~~~~~~~~
+
+   Explanation for issues of type "ContentDescription":
+   Non-textual widgets like ImageViews and ImageButtons should use the
+   contentDescription attribute to specify a textual description of the widget
+   such that screen readers and other accessibility tools can adequately
+   describe the user interface.
+
+   Note that elements in application screens that are purely decorative and do
+   not provide any content or enable a user action should not have
+   accessibility content descriptions. In this case, set their descriptions to
+   @null. If your app's minSdkVersion is 16 or higher, you can instead set
+   these graphical elements' android:importantForAccessibility attributes to
+   no.
+
+   Note that for text fields, you should not set both the hint and the
+   contentDescription attributes since the hint will never be shown. Just set
+   the hint.
+
+   https://developer.android.com/guide/topics/ui/accessibility/apps#special-cases
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_connection_error_dialog.xml:57: Warning: Missing accessibility label: provide either a view with an android:labelFor that references this view or provide an android:hint [LabelFor]
+                <AutoCompleteTextView
+                 ~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_publish_dialog.xml:142: Warning: Missing accessibility label: provide either a view with an android:labelFor that references this view or provide an android:hint [LabelFor]
+                    <AutoCompleteTextView
+                     ~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "LabelFor":
+   Editable text fields should provide an android:hint or, provided your
+   minSdkVersion is at least 17, they may be referenced by a view with a
+   android:labelFor attribute.
+
+   When using android:labelFor, be sure to provide an android:text or an
+   android:contentDescription.
+
+   If your view is labeled but by a label in a different layout which includes
+   this one, just suppress this warning from lint.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/java/io/heckel/ntfy/ui/ShareActivity.kt:240: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+            contentFileInfo.text = "${info.filename}\n${formatBytes(info.size)}"
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_share.xml:77: Warning: Hardcoded string "some file.mp3n7.1 MB", should use @string resource [HardcodedText]
+                    android:text="some file.mp3\n7.1 MB"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_share.xml:165: Warning: Hardcoded string "Unable to resolve host example.com", should use @string resource [HardcodedText]
+                android:text="Unable to resolve host example.com"
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/button_action.xml:6: Warning: Hardcoded string "Button", should use @string resource [HardcodedText]
+        android:text="Button"
+        ~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_add_dialog.xml:221: Warning: Hardcoded string "Unable to resolve host example.com", should use @string resource [HardcodedText]
+                    android:text="Unable to resolve host example.com"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_add_dialog.xml:326: Warning: Hardcoded string "Login failed. User not authorized.", should use @string resource [HardcodedText]
+                    android:text="Login failed. User not authorized."
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:30: Warning: Hardcoded string "Sun, October 31, 2021, 10:43:12", should use @string resource [HardcodedText]
+                android:text="Sun, October 31, 2021, 10:43:12"
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:57: Warning: Hardcoded string "This is a very very very long message. It could be as long as 1024 charaters, which is a lot more than you'd think. No, really so far this message is barely 180 characters long. I can't believe how long 1024 bytes are. This is outrageous. Oh you know what, I think I won't type the whole thing. This seems a little too long for a sample text. Well, anyway, it was nice chatting. So far this message is about 400 bytes long. So maybe just double what you see and that's that.", should use @string resource [HardcodedText]
+                android:text="This is a very very very long message. It could be as long as 1024 charaters, which is a lot more than you'd think. No, really so far this message is barely 180 characters long. I can't believe how long 1024 bytes are. This is outrageous. Oh you know what, I think I won't type the whole thing. This seems a little too long for a sample text. Well, anyway, it was nice chatting. So far this message is about 400 bytes long. So maybe just double what you see and that's that."
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:68: Warning: Hardcoded string "This is an optional title. It can also be a little longer but not too long.", should use @string resource [HardcodedText]
+                android:text="This is an optional title. It can also be a little longer but not too long."
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:96: Warning: Hardcoded string "Tags: ssh, zfs", should use @string resource [HardcodedText]
+                android:text="Tags: ssh, zfs"
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:124: Warning: Hardcoded string "attachment.jpgn58 MB, not downloaded, expires 1/2/2022 10:30 PM", should use @string resource [HardcodedText]
+                    android:text="attachment.jpg\n58 MB, not downloaded, expires 1/2/2022 10:30 PM"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:147: Warning: Hardcoded string "Bing it", should use @string resource [HardcodedText]
+                    android:text="Bing it"
+                    ~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:152: Warning: Hardcoded string "Google it", should use @string resource [HardcodedText]
+                    android:text="Google it"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:157: Warning: Hardcoded string "DuckDuckGo it", should use @string resource [HardcodedText]
+                    android:text="DuckDuckGo it"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_main_item.xml:17: Warning: Hardcoded string "ntfy.sh/example", should use @string resource [HardcodedText]
+            android:text="ntfy.sh/example"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_main_item.xml:27: Warning: Hardcoded string "89 notifications, reconnecting ... This may wrap in the case of UnifiedPush", should use @string resource [HardcodedText]
+            android:text="89 notifications, reconnecting ... This may wrap in the case of UnifiedPush"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_main_item.xml:63: Warning: Hardcoded string "10:13", should use @string resource [HardcodedText]
+            android:text="10:13"
+            ~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_main_item.xml:70: Warning: Hardcoded string "99+", should use @string resource [HardcodedText]
+            android:text="99+"
+            ~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_share_item.xml:18: Warning: Hardcoded string "ntfy.sh/example", should use @string resource [HardcodedText]
+            android:text="ntfy.sh/example"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "HardcodedText":
+   Hardcoding text attributes directly in layout files is bad for several
+   reasons:
+
+   * When creating configuration variations (for example for landscape or
+   portrait) you have to repeat the actual text (and keep it up to date when
+   making changes)
+
+   * The application cannot be translated to other languages by just adding
+   new translations for existing string resources.
+
+   There are quickfixes to automatically extract this hardcoded string into a
+   resource lookup.
+
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/activity_share.xml:67: Warning: When you define paddingStart you should probably also define paddingEnd for right-to-left symmetry [RtlSymmetry]
+                android:clickable="true" android:focusable="true" android:padding="4dp" android:paddingStart="0dp">
+                                                                                        ~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:28: Warning: When you define paddingEnd you should probably also define paddingStart for right-to-left symmetry [RtlSymmetry]
+            android:paddingBottom="6dp" android:paddingTop="6dp" android:paddingEnd="6dp">
+                                                                 ~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_detail_item.xml:114: Warning: When you define paddingStart you should probably also define paddingEnd for right-to-left symmetry [RtlSymmetry]
+                android:clickable="true" android:focusable="true" android:padding="4dp" android:paddingStart="0dp">
+                                                                                        ~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_notification_dialog.xml:36: Warning: When you define paddingStart you should probably also define paddingEnd for right-to-left symmetry [RtlSymmetry]
+                android:paddingStart="5dp"
+                ~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_notification_dialog.xml:45: Warning: When you define paddingStart you should probably also define paddingEnd for right-to-left symmetry [RtlSymmetry]
+                android:paddingStart="5dp"
+                ~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_notification_dialog.xml:54: Warning: When you define paddingStart you should probably also define paddingEnd for right-to-left symmetry [RtlSymmetry]
+                android:paddingStart="5dp"
+                ~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_notification_dialog.xml:63: Warning: When you define paddingStart you should probably also define paddingEnd for right-to-left symmetry [RtlSymmetry]
+                android:paddingStart="5dp"
+                ~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_notification_dialog.xml:72: Warning: When you define paddingStart you should probably also define paddingEnd for right-to-left symmetry [RtlSymmetry]
+                android:paddingStart="5dp"
+                ~~~~~~~~~~~~~~~~~~~~
+/home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/src/main/res/layout/fragment_notification_dialog.xml:81: Warning: When you define paddingStart you should probably also define paddingEnd for right-to-left symmetry [RtlSymmetry]
+                android:paddingStart="5dp"
+                ~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "RtlSymmetry":
+   If you specify padding or margin on the left side of a layout, you should
+   probably also specify padding on the right side (and vice versa) for
+   right-to-left layout symmetry.
+
+0 errors, 251 warnings

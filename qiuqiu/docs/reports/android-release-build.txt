@@ -1,0 +1,118 @@
+
+> Configure project :app
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:prePlayReleaseBuild
+> Task :app:mergePlayReleaseJniLibFolders UP-TO-DATE
+> Task :app:mergePlayReleaseNativeLibs UP-TO-DATE
+> Task :app:stripPlayReleaseDebugSymbols UP-TO-DATE
+> Task :app:extractPlayReleaseNativeSymbolTables UP-TO-DATE
+> Task :app:mergePlayReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:checkPlayReleaseDuplicateClasses UP-TO-DATE
+> Task :app:buildKotlinToolingMetadata UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generatePlayReleaseBuildConfig UP-TO-DATE
+> Task :app:generatePlayReleaseResources UP-TO-DATE
+> Task :app:processPlayReleaseGoogleServices SKIPPED
+> Task :app:packagePlayReleaseResources UP-TO-DATE
+> Task :app:processPlayReleaseNavigationResources UP-TO-DATE
+> Task :app:parsePlayReleaseLocalResources UP-TO-DATE
+> Task :app:generatePlayReleaseRFile UP-TO-DATE
+> Task :app:javaPreCompilePlayRelease UP-TO-DATE
+> Task :app:checkPlayReleaseAarMetadata UP-TO-DATE
+> Task :app:compilePlayReleaseNavigationResources UP-TO-DATE
+> Task :app:mapPlayReleaseSourceSetPaths UP-TO-DATE
+> Task :app:mergePlayReleaseResources UP-TO-DATE
+> Task :app:createPlayReleaseCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksPlayRelease UP-TO-DATE
+> Task :app:processPlayReleaseMainManifest UP-TO-DATE
+> Task :app:processPlayReleaseManifest UP-TO-DATE
+> Task :app:processPlayReleaseManifestForPackage UP-TO-DATE
+> Task :app:processPlayReleaseResources UP-TO-DATE
+> Task :app:desugarPlayReleaseFileDependencies UP-TO-DATE
+> Task :app:mergePlayReleaseStartupProfile UP-TO-DATE
+> Task :app:mergeExtDexPlayRelease UP-TO-DATE
+> Task :app:mergePlayReleaseArtProfile UP-TO-DATE
+> Task :app:generatePlayReleaseAssets UP-TO-DATE
+> Task :app:mergePlayReleaseAssets
+> Task :app:extractPlayReleaseVersionControlInfo UP-TO-DATE
+> Task :app:compressPlayReleaseAssets
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:optimizePlayReleaseResources UP-TO-DATE
+> Task :app:collectPlayReleaseDependencies UP-TO-DATE
+> Task :app:sdkPlayReleaseDependencyData UP-TO-DATE
+> Task :app:validateSigningPlayRelease UP-TO-DATE
+> Task :app:writePlayReleaseAppMetadata UP-TO-DATE
+> Task :app:writePlayReleaseSigningConfigVersions UP-TO-DATE
+> Task :app:prePlayDebugBuild UP-TO-DATE
+> Task :app:generatePlayDebugBuildConfig UP-TO-DATE
+> Task :app:generatePlayDebugResources UP-TO-DATE
+> Task :app:processPlayDebugGoogleServices SKIPPED
+> Task :app:packagePlayDebugResources UP-TO-DATE
+> Task :app:processPlayDebugNavigationResources UP-TO-DATE
+> Task :app:parsePlayDebugLocalResources UP-TO-DATE
+> Task :app:generatePlayDebugRFile UP-TO-DATE
+> Task :app:javaPreCompilePlayDebug UP-TO-DATE
+> Task :app:checkPlayDebugAarMetadata UP-TO-DATE
+> Task :app:compilePlayDebugNavigationResources UP-TO-DATE
+> Task :app:mapPlayDebugSourceSetPaths UP-TO-DATE
+> Task :app:mergePlayDebugResources UP-TO-DATE
+> Task :app:createPlayDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksPlayDebug UP-TO-DATE
+> Task :app:processPlayDebugMainManifest UP-TO-DATE
+> Task :app:processPlayDebugManifest UP-TO-DATE
+> Task :app:processPlayDebugManifestForPackage UP-TO-DATE
+> Task :app:processPlayDebugResources UP-TO-DATE
+> Task :app:prePlayDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompilePlayDebugUnitTest UP-TO-DATE
+> Task :app:kspPlayReleaseKotlin
+> Task :app:kspPlayDebugKotlin
+> Task :app:compilePlayReleaseKotlin
+> Task :app:compilePlayReleaseJavaWithJavac UP-TO-DATE
+> Task :app:dexBuilderPlayRelease
+> Task :app:mergePlayReleaseGlobalSynthetics UP-TO-DATE
+> Task :app:compilePlayDebugKotlin
+> Task :app:generatePlayReleaseLintVitalReportModel
+> Task :app:processPlayReleaseJavaRes UP-TO-DATE
+> Task :app:mergePlayReleaseJavaResource UP-TO-DATE
+> Task :app:compilePlayDebugJavaWithJavac UP-TO-DATE
+> Task :app:processPlayDebugJavaRes UP-TO-DATE
+> Task :app:bundlePlayDebugClassesToRuntimeJar
+> Task :app:generatePlayReleaseLintReportModel
+> Task :app:bundlePlayDebugClassesToCompileJar
+> Task :app:kspPlayDebugUnitTestKotlin
+> Task :app:compilePlayDebugUnitTestKotlin
+> Task :app:compilePlayDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processPlayDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:testPlayDebugUnitTest
+> Task :app:mergeDexPlayRelease
+> Task :app:compilePlayReleaseArtProfile
+> Task :app:lintVitalAnalyzePlayRelease
+> Task :app:lintVitalReportPlayRelease SKIPPED
+> Task :app:lintVitalPlayRelease SKIPPED
+> Task :app:packagePlayRelease
+> Task :app:createPlayReleaseApkListingFileRedirect UP-TO-DATE
+> Task :app:assemblePlayRelease
+> Task :app:lintAnalyzePlayRelease
+
+> Task :app:lintReportPlayRelease
+Wrote HTML report to file:///home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/app/build/reports/lint-results-playRelease.html
+
+> Task :app:lintPlayRelease
+
+[Incubating] Problems report is available at: file:///home/user/Documents/Codex/2026-11-20/files-pasted-by-the-user-qiuqiu/outputs/qiuqiu-push/android/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.2.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 27s
+83 actionable tasks: 22 executed, 61 up-to-date

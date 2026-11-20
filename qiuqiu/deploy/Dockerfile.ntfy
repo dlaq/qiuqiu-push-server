@@ -1,0 +1,27 @@
+FROM node:22-alpine AS web
+WORKDIR /src/web
+COPY web/package*.json ./
+RUN npm ci --no-audit --no-fund
+COPY web/ ./
+RUN npm run build && mv build/index.html build/app.html && rm build/config.js
+FROM python:3.12-alpine AS docs
+WORKDIR /src
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY mkdocs.yml ./
+COPY docs/ ./docs/
+RUN python -m mkdocs build
+FROM golang:1.26.0 AS build
+WORKDIR /src
+COPY go.* ./
+RUN go mod download
+COPY . ./
+COPY --from=web /src/web/build ./server/site
+COPY --from=docs /src/server/docs ./server/docs
+RUN CGO_ENABLED=1 go build -trimpath -tags 'netgo osusergo' -ldflags '-s -w -linkmode external -extldflags "-static" -X main.version=2.38.1-qiuqiu.2' -o /ntfy .
+FROM alpine:3.23
+RUN apk add --no-cache ca-certificates tzdata && mkdir -p /var/lib/ntfy /run/ntfy
+COPY --from=build /ntfy /usr/local/bin/ntfy
+COPY qiuqiu/deploy/ntfy-entrypoint.sh /entrypoint.sh
+EXPOSE 80
+ENTRYPOINT ["/entrypoint.sh"]

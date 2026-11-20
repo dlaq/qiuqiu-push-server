@@ -1,0 +1,8 @@
+{
+  "result": "passed",
+  "from": 18,
+  "to": 19,
+  "legacy_message_retained": true,
+  "new_metadata_column_nullable": true,
+  "environment": "isolated Android 35 emulator"
+}

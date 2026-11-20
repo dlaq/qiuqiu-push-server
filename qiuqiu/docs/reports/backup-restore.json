@@ -1,0 +1,14 @@
+{
+  "qiuqiu": {
+    "integrity": "ok",
+    "table_counts_match": true
+  },
+  "ntfy-auth": {
+    "integrity": "ok",
+    "table_counts_match": true
+  },
+  "ntfy-cache": {
+    "integrity": "ok",
+    "table_counts_match": true
+  }
+}

@@ -1,0 +1,8 @@
+services:
+  ntfy:
+    environment:
+      NTFY_FIREBASE_KEY_FILE: /run/secrets/firebase-adminsdk.json
+    secrets: [firebase_credentials]
+secrets:
+  firebase_credentials:
+    file: ./secrets/firebase-adminsdk.json

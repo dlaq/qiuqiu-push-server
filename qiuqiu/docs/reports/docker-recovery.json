@@ -1,0 +1,8 @@
+{
+  "result": "passed",
+  "method": "stop writers; tar both Docker volumes; restore into independent volumes; restart services",
+  "restored_users_match": true,
+  "user_count": 3,
+  "restored_admin_login": "passed",
+  "original_stack_restarted": true
+}

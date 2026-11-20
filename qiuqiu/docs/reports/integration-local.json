@@ -1,0 +1,19 @@
+{
+  "result": "passed",
+  "protocols": 7,
+  "devices": 2,
+  "checks": [
+    "one-time pairing",
+    "all adapters publish via real ntfy",
+    "private cache authentication",
+    "cross-device isolation",
+    "native group fanout",
+    "native actions preserved",
+    "native attachment accessible",
+    "long Chinese body preserved",
+    "business metadata",
+    "upstream key and device revocation"
+  ],
+  "firebase": "not configured; no cloud delivery claimed",
+  "test_user": "integration-1795165681265653109"
+}

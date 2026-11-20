@@ -1,0 +1,14 @@
+**/node_modules/
+**/build/
+**/.gradle/
+**/local.properties
+**/google-services.json
+**/*adminsdk*.json
+deploy/secrets/
+deploy/.env
+**/*.jks
+**/*.keystore
+**/data/
+
+admin/dist/
+releases/

@@ -1,0 +1,11 @@
+{
+  "gateway": {
+    "image_id": "sha256:9210b12ead2fcd3deb2c3ab6f133707fc409b43084722b835a2944e795745612",
+    "build": "passed"
+  },
+  "ntfy": {
+    "image_id": "sha256:ddda248ea74a9dfa38f3828f53e1bbe32d7df0eb73fad1f6c07dca2520585bae",
+    "build": "passed"
+  },
+  "firebase": "not configured"
+}

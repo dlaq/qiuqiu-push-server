@@ -1,3 +1,13 @@
+# 球球推送 · QiuQiu Push Server
+
+[Android 客户端](https://github.com/dlaq/qiuqiu-push-android) · [后台源码与部署入口](qiuqiu/README.md) · [API 文档](qiuqiu/docs/api.md) · [跟随上游升级](UPSTREAM_UPGRADE.md)
+
+本仓库 Fork 自 **binwiederhier/ntfy**。`main` 包含球球推送的 ntfy 扩展；自建 Go API Gateway、Vue 管理后台、Docker Compose 和文档位于 [`qiuqiu/`](qiuqiu/)。Firebase、域名和真机验收状态见 [验证报告](qiuqiu/docs/validation.md)。不包含 Firebase 私钥、Android 签名私钥或真实部署密码。
+
+原 ntfy README 保留如下。
+
+---
+
 ![ntfy](web/public/static/images/ntfy.png)
 
 # ntfy.sh | Send push notifications to your phone or desktop via PUT/POST

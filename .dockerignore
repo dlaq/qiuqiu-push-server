@@ -1,3 +1,13 @@
 dist
 */node_modules
 Dockerfile*
+
+**/node_modules
+**/.git
+qiuqiu/admin/dist
+qiuqiu/deploy/secrets
+qiuqiu/deploy/.env
+qiuqiu/releases
+**/*.jks
+**/*.keystore
+**/*adminsdk*.json

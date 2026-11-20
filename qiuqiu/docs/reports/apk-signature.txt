@@ -1,0 +1,17 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=QiuQiu Push, O=Self Hosted
+Signer #1 certificate SHA-256 digest: 575c0a3044d9c3c8acb591d83801bf7b471632bb723f0156b7bfafa1c614b08c
+Signer #1 certificate SHA-1 digest: 9dd313bec9c3f1c3e100888bcacb79e22d6185d5
+Signer #1 certificate MD5 digest: 3391931768e43b746571b1c26085f894
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: a87dc9153b8b51be4e2b89f7fa0f6e33f52a3fd6a901d28f4774a6b49543c4db
+Signer #1 public key SHA-1 digest: fe52574245699205a56cc476b9dbaa022d131c22
+Signer #1 public key MD5 digest: d005810d9d5d462b06254773e2dc8694
