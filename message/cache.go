@@ -38,7 +38,7 @@ const (
 
 	// insertMessageColumns is the number of values insertMessageArgs returns per message, which is
 	// the number of columns in each backend's INSERT statement
-	insertMessageColumns = 24
+	insertMessageColumns = 25
 )
 
 const (
@@ -225,6 +225,7 @@ func insertMessageArgs(m *model.Message) ([]any, error) {
 		sender,
 		m.User,
 		util.SanitizeUTF8(m.ContentType),
+		encodeQiuQiu(m.QiuQiu),
 		m.Encoding,
 		published,
 	}, nil
@@ -703,7 +704,7 @@ func readMessages(rows *sql.Rows) ([]*model.Message, error) {
 func readMessage(rows *sql.Rows, extra ...any) (*model.Message, error) {
 	var timestamp, expires, attachmentSize, attachmentExpires int64
 	var priority int
-	var id, sequenceID, event, topic, msg, title, tagsStr, click, icon, actionsStr, attachmentName, attachmentType, attachmentURL, sender, user, contentType, encoding string
+	var id, sequenceID, event, topic, msg, title, tagsStr, click, icon, actionsStr, attachmentName, attachmentType, attachmentURL, sender, user, contentType, qiuqiu, encoding string
 	dest := []any{
 		&id,
 		&sequenceID,
@@ -726,6 +727,7 @@ func readMessage(rows *sql.Rows, extra ...any) (*model.Message, error) {
 		&sender,
 		&user,
 		&contentType,
+		&qiuqiu,
 		&encoding,
 	}
 	if err := rows.Scan(append(dest, extra...)...); err != nil {
@@ -773,6 +775,7 @@ func readMessage(rows *sql.Rows, extra ...any) (*model.Message, error) {
 		Sender:      senderIP,
 		User:        user,
 		ContentType: contentType,
+		QiuQiu:      decodeQiuQiu(qiuqiu),
 		Encoding:    encoding,
 	}, nil
 }

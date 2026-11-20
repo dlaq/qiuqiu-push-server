@@ -34,6 +34,7 @@ const (
 			sender TEXT NOT NULL,
 			user TEXT NOT NULL,
 			content_type TEXT NOT NULL,
+ qiuqiu TEXT NOT NULL DEFAULT '',
 			encoding TEXT NOT NULL,
 			published INT NOT NULL
 		);
@@ -206,6 +207,7 @@ func sqliteMigrations(cacheDuration time.Duration) schema.Migrations {
 		{From: 13, To: 14}: schema.Query(sqliteMigrate13To14AlterMessagesTableQuery),
 		{From: 14, To: 15}: schema.Nop, // Corresponds to Postgres migration
 		{From: 15, To: 16}: schema.Nop, // 15 -> 16 adds the Postgres claim column; SQLite is single-node
+		{From: 17, To: 18}: schema.Query("ALTER TABLE messages ADD COLUMN qiuqiu TEXT NOT NULL DEFAULT ''"),
 		{From: 16, To: 17}: schema.Query(sqliteMigrate16To17CreateIndexQuery),
 	}
 }

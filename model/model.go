@@ -29,26 +29,38 @@ var (
 )
 
 // Message represents a message published to a topic
+// QiuQiuMetadata is an optional extension; ordinary ntfy messages are unchanged.
+type QiuQiuMetadata struct {
+	Group          string `json:"group,omitempty"`
+	MessageID      string `json:"message_id,omitempty"`
+	BusinessType   string `json:"business_type,omitempty"`
+	Icon           string `json:"icon,omitempty"`
+	Sound          string `json:"sound,omitempty"`
+	SourceProtocol string `json:"source_protocol,omitempty"`
+	ContentType    string `json:"content_type,omitempty"`
+}
+
 type Message struct {
-	ID          string      `json:"id"`                    // Random message ID
-	SequenceID  string      `json:"sequence_id,omitempty"` // Message sequence ID for updating message contents (omitted if same as ID)
-	Time        int64       `json:"time"`                  // Unix time in seconds
-	Expires     int64       `json:"expires,omitempty"`     // Unix time in seconds (not required for open/keepalive)
-	Event       string      `json:"event"`                 // One of the above
-	Topic       string      `json:"topic"`
-	Title       string      `json:"title,omitempty"`
-	Message     string      `json:"message,omitempty"`
-	Priority    int         `json:"priority,omitempty"`
-	Tags        []string    `json:"tags,omitempty"`
-	Click       string      `json:"click,omitempty"`
-	Icon        string      `json:"icon,omitempty"`
-	Actions     []*Action   `json:"actions,omitempty"`
-	Attachment  *Attachment `json:"attachment,omitempty"`
-	PollID      string      `json:"poll_id,omitempty"`
-	ContentType string      `json:"content_type,omitempty"` // text/plain by default (if empty), or text/markdown
-	Encoding    string      `json:"encoding,omitempty"`     // Empty for raw UTF-8, or "base64" for encoded bytes
-	Sender      netip.Addr  `json:"-"`                      // IP address of uploader, used for rate limiting
-	User        string      `json:"-"`                      // UserID of the uploader, used to associated attachments
+	QiuQiu      *QiuQiuMetadata `json:"qiuqiu,omitempty"`
+	ID          string          `json:"id"`                    // Random message ID
+	SequenceID  string          `json:"sequence_id,omitempty"` // Message sequence ID for updating message contents (omitted if same as ID)
+	Time        int64           `json:"time"`                  // Unix time in seconds
+	Expires     int64           `json:"expires,omitempty"`     // Unix time in seconds (not required for open/keepalive)
+	Event       string          `json:"event"`                 // One of the above
+	Topic       string          `json:"topic"`
+	Title       string          `json:"title,omitempty"`
+	Message     string          `json:"message,omitempty"`
+	Priority    int             `json:"priority,omitempty"`
+	Tags        []string        `json:"tags,omitempty"`
+	Click       string          `json:"click,omitempty"`
+	Icon        string          `json:"icon,omitempty"`
+	Actions     []*Action       `json:"actions,omitempty"`
+	Attachment  *Attachment     `json:"attachment,omitempty"`
+	PollID      string          `json:"poll_id,omitempty"`
+	ContentType string          `json:"content_type,omitempty"` // text/plain by default (if empty), or text/markdown
+	Encoding    string          `json:"encoding,omitempty"`     // Empty for raw UTF-8, or "base64" for encoded bytes
+	Sender      netip.Addr      `json:"-"`                      // IP address of uploader, used for rate limiting
+	User        string          `json:"-"`                      // UserID of the uploader, used to associated attachments
 }
 
 // Context returns a log context for the message

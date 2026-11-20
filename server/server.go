@@ -1529,6 +1529,11 @@ func (s *Server) parsePublishParams(r *http.Request, m *model.Message) (cache bo
 		firebase = false
 		unifiedpush = true
 	}
+	if raw := readParam(r, "x-qiuqiu"); raw != "" {
+		if len(raw) > 2048 || json.Unmarshal([]byte(raw), &m.QiuQiu) != nil {
+			return false, false, "", "", "", false, "", errHTTPBadRequestMessageJSONInvalid
+		}
+	}
 	m.PollID = readParam(r, "x-poll-id", "poll-id")
 	if m.PollID != "" {
 		unifiedpush = false
@@ -2253,7 +2258,7 @@ func (s *Server) runManager() {
 }
 
 func (s *Server) runFirebaseKeepaliver() {
-	if s.firebaseClient == nil {
+	if s.firebaseClient == nil || s.config.FirebaseKeepaliveInterval <= 0 {
 		return
 	}
 	v := newVisitor(s.visitors, netip.IPv4Unspecified(), nil) // Background process, not a real visitor, uses IP 0.0.0.0
@@ -2361,6 +2366,13 @@ func (s *Server) transformBodyJSON(next handleFunc) handleFunc {
 		}
 		r.URL.Path = "/" + m.Topic
 		r.Body = io.NopCloser(strings.NewReader(m.Message))
+		if m.QiuQiu != nil {
+			meta, err := json.Marshal(m.QiuQiu)
+			if err != nil || len(meta) > 2048 {
+				return errHTTPBadRequestMessageJSONInvalid
+			}
+			r.Header.Set("X-QiuQiu", string(meta))
+		}
 		if m.Title != "" {
 			r.Header.Set("X-Title", m.Title)
 		}

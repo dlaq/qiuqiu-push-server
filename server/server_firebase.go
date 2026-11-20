@@ -200,6 +200,13 @@ func toFirebaseMessage(m *model.Message, auther user.Auther) (*messaging.Message
 		}
 		apnsConfig = createAPNSAlertConfig(m, data)
 	}
+	if m.Event == model.MessageEvent && m.QiuQiu != nil {
+		raw, err := json.Marshal(m.QiuQiu)
+		if err != nil {
+			return nil, err
+		}
+		data["qiuqiu"] = string(raw)
+	}
 	var androidConfig *messaging.AndroidConfig
 	if m.Priority >= 4 {
 		androidConfig = &messaging.AndroidConfig{

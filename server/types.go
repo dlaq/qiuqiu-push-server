@@ -11,24 +11,25 @@ import (
 
 // publishMessage is used as input when publishing as JSON
 type publishMessage struct {
-	Topic      string         `json:"topic"`
-	SequenceID string         `json:"sequence_id"`
-	Title      string         `json:"title"`
-	Message    string         `json:"message"`
-	Priority   int            `json:"priority"`
-	Tags       []string       `json:"tags"`
-	Click      string         `json:"click"`
-	Icon       string         `json:"icon"`
-	Actions    []model.Action `json:"actions"`
-	Attach     string         `json:"attach"`
-	Markdown   bool           `json:"markdown"`
-	Filename   string         `json:"filename"`
-	Email      string         `json:"email"`
-	Call       string         `json:"call"`
-	Cache      string         `json:"cache"`    // use string as it defaults to true (or use &bool instead)
-	Firebase   string         `json:"firebase"` // use string as it defaults to true (or use &bool instead)
-	Delay      string         `json:"delay"`
-	Timezone   string         `json:"timezone"`
+	QiuQiu     *model.QiuQiuMetadata `json:"qiuqiu,omitempty"`
+	Topic      string                `json:"topic"`
+	SequenceID string                `json:"sequence_id"`
+	Title      string                `json:"title"`
+	Message    string                `json:"message"`
+	Priority   int                   `json:"priority"`
+	Tags       []string              `json:"tags"`
+	Click      string                `json:"click"`
+	Icon       string                `json:"icon"`
+	Actions    []model.Action        `json:"actions"`
+	Attach     string                `json:"attach"`
+	Markdown   bool                  `json:"markdown"`
+	Filename   string                `json:"filename"`
+	Email      string                `json:"email"`
+	Call       string                `json:"call"`
+	Cache      string                `json:"cache"`    // use string as it defaults to true (or use &bool instead)
+	Firebase   string                `json:"firebase"` // use string as it defaults to true (or use &bool instead)
+	Delay      string                `json:"delay"`
+	Timezone   string                `json:"timezone"`
 }
 
 // dispatchOpts selects which delivery targets fire for a published message, beyond delivery
