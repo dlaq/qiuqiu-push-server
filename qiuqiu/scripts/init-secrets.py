@@ -19,7 +19,7 @@ if not h.exists():
     except ImportError:
         binary=pathlib.Path(os.environ.get('QQ_GATEWAY_BIN',str(root/'releases/qiuqiu-gateway-linux-amd64')))
         if binary.exists():command=[str(binary),'hash-password']
-        else:command=['docker','run','--rm','-i','qiuqiu-push-gateway:latest','hash-password']
+        else:command=['docker','run','--rm','-i',os.environ.get('QQ_GATEWAY_IMAGE','qiuqiu-push-gateway:latest'),'hash-password']
         try:value=subprocess.run(command,input=p.read_bytes(),capture_output=True,check=True).stdout.decode()
         except (OSError,subprocess.CalledProcessError):raise SystemExit('请先运行 docker compose build，或安装 python3-bcrypt，然后重试')
     else:value=bcrypt.hashpw(p.read_bytes(),bcrypt.gensalt()).decode()

@@ -28,7 +28,6 @@ var (
 	ErrMessageNotFound       = errors.New("message not found")
 )
 
-// Message represents a message published to a topic
 // QiuQiuMetadata is an optional extension; ordinary ntfy messages are unchanged.
 type QiuQiuMetadata struct {
 	Group          string `json:"group,omitempty"`
@@ -40,6 +39,7 @@ type QiuQiuMetadata struct {
 	ContentType    string `json:"content_type,omitempty"`
 }
 
+// Message represents a message published to a topic.
 type Message struct {
 	QiuQiu      *QiuQiuMetadata `json:"qiuqiu,omitempty"`
 	ID          string          `json:"id"`                    // Random message ID

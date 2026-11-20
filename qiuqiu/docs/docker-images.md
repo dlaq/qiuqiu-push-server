@@ -15,10 +15,19 @@ main 的相关源码变更自动发布，也可在 Actions 页面选择 main 手
 
 ## 使用已发布镜像
 
-克隆后台仓库，进入 `qiuqiu/deploy`，按 [部署说明](deployment.md) 准备域名、`.env`、密码文件和 Firebase 凭证。还需在 `.env` 增加：
+克隆后台仓库，按 [部署说明](deployment.md) 准备两个域名和 Firebase 凭证。使用预编译镜像时无需执行 `docker compose build`。在 `qiuqiu` 目录初始化：
+
+```sh
+cp deploy/.env.example deploy/.env
+# 编辑 deploy/.env 的域名，并增加下方的镜像配置。
+QQ_GATEWAY_IMAGE=dlaq/qiuqiu-push-gateway:latest python3 scripts/init-secrets.py
+cd deploy
+```
+
+`QQ_GATEWAY_IMAGE` 让初始化脚本直接使用已发布镜像计算 bcrypt；脚本会交互读取后台管理员密码，不打印密码。`.env` 增加：
 
 ```dotenv
-DOCKERHUB_NAMESPACE=<DockerHub用户名>
+DOCKERHUB_NAMESPACE=dlaq
 QQ_IMAGE_TAG=latest
 ```
 
