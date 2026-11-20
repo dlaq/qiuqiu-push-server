@@ -1,0 +1,6 @@
+# Use together with compose.yml and --no-build. Docker selects amd64 or arm64 automatically.
+services:
+  gateway:
+    image: ${DOCKERHUB_NAMESPACE:?set DOCKERHUB_NAMESPACE}/qiuqiu-push-gateway:${QQ_IMAGE_TAG:-latest}
+  ntfy:
+    image: ${DOCKERHUB_NAMESPACE:?set DOCKERHUB_NAMESPACE}/qiuqiu-push-ntfy:${QQ_IMAGE_TAG:-latest}

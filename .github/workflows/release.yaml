@@ -5,6 +5,7 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 jobs:
   release:
+    if: github.repository == 'binwiederhier/ntfy'
     runs-on: ubuntu-24.04
     services:
       postgres:

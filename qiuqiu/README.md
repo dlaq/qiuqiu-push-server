@@ -11,6 +11,7 @@
 3. 登录后台创建用户、生成一次性配对码，在 APP 中绑定设备。
 4. 创建 Topic、绑定设备、签发对应协议的本地凭证，使用 [API 文档](docs/api.md) 与 `scripts/curl/` 示例发送消息。
 5. 根据 [测试报告](docs/validation.md) 和 [真机验收表](docs/device-acceptance.md) 补齐云端及设备验收。
+6. 使用 Docker Hub 的 amd64 / arm64 镜像部署，或维护自动发布流程，见 [Docker 镜像说明](docs/docker-images.md)。
 
 ## 源码结构
 
