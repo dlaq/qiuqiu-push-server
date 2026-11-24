@@ -113,3 +113,28 @@ func TestWebsocketPublisherAndDirect(t *testing.T) {
 		t.Fatal("WS management route exposed")
 	}
 }
+
+func TestOneBotWebsocketRequiresValidAcceptance(t *testing.T) {
+	for _, tc := range []struct {
+		name, code string
+		accepted   bool
+	}{{"ok", "0", true}, {"invalid", `"not-an-integer"`, false}, {"null", "null", false}, {"underflow", "1e-999", false}} {
+		t.Run(tc.name, func(t *testing.T) {
+			server := httptest.NewServer(websocket.Handler(func(ws *websocket.Conn) {
+				defer ws.Close()
+				var req params
+				if websocket.JSON.Receive(ws, &req) != nil {
+					return
+				}
+				websocket.JSON.Send(ws, params{"echo": req.str("echo"), "status": "ok", "retcode": json.RawMessage(tc.code)})
+			}))
+			defer server.Close()
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			err := sendOneBotWS(ctx, ChannelConfig{"url": "ws" + strings.TrimPrefix(server.URL, "http"), "allow_private": "true"}, params{"message": "测试"})
+			if (err == nil) != tc.accepted {
+				t.Fatalf("acceptance=%v error=%v", tc.accepted, err)
+			}
+		})
+	}
+}

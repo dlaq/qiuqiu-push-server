@@ -66,11 +66,11 @@ func sendOneBotWS(ctx context.Context, c ChannelConfig, body any) error {
 	}
 	for {
 		var response params
-		if e = websocket.JSON.Receive(ws, &response); e != nil {
+		if e = receiveProviderFrame(ws, &response); e != nil {
 			return e
 		}
 		if response.str("echo") == echo {
-			if response.str("status") != "ok" || response.num("retcode") != 0 {
+			if response.str("status") != "ok" || !providerCode(response, "retcode", 0) {
 				return fmt.Errorf("OneBot拒绝发送")
 			}
 			return nil
@@ -112,7 +112,7 @@ func (s *Server) oneBotReverseHTTP(w http.ResponseWriter, r *http.Request) {
 			for {
 				_ = ws.SetReadDeadline(time.Now().Add(120 * time.Second))
 				var frame params
-				if websocket.JSON.Receive(ws, &frame) != nil {
+				if receiveProviderFrame(ws, &frame) != nil {
 					return
 				}
 				if frame.str("echo") != "" {
@@ -147,7 +147,7 @@ func (s *Server) oneBotReverseHTTP(w http.ResponseWriter, r *http.Request) {
 					case response := <-responses:
 						if response.str("echo") == echo {
 							var err error
-							if response.str("status") != "ok" || response.num("retcode") != 0 {
+							if response.str("status") != "ok" || !providerCode(response, "retcode", 0) {
 								err = fmt.Errorf("OneBot拒绝发送")
 							}
 							p.Done <- err
@@ -166,6 +166,18 @@ func (s *Server) oneBotReverseHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}}.ServeHTTP(w, r)
+}
+
+func receiveProviderFrame(ws *websocket.Conn, response *params) error {
+	var raw []byte
+	if err := websocket.Message.Receive(ws, &raw); err != nil {
+		return err
+	}
+	value, err := decodeProviderJSON(raw)
+	if err == nil {
+		*response = value
+	}
+	return err
 }
 
 func (s *Server) sendOneBotReverse(ctx context.Context, c ChannelConfig, body any) error {

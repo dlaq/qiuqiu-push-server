@@ -98,6 +98,9 @@ func (s *Server) initChannels() error {
 	return nil
 }
 func (s *Server) sealConfig(c ChannelConfig) (string, error) {
+	if c == nil {
+		c = ChannelConfig{}
+	}
 	block, e := aes.NewCipher(s.channelKey)
 	if e != nil {
 		return "", e
@@ -133,6 +136,12 @@ func (s *Server) readChannel(uid, id string) (string, ChannelConfig, error) {
 	}
 	c := ChannelConfig{}
 	e = json.Unmarshal(plain, &c)
+	if e != nil {
+		return "", nil, e
+	}
+	if c == nil {
+		c = ChannelConfig{}
+	}
 	c["_id"] = id
 	c["_user"] = uid
 	return kind, c, e
@@ -516,14 +525,27 @@ func (s *Server) externalJSON(ctx context.Context, method, endpoint string, body
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return nil, fmt.Errorf("通道 HTTP %d", resp.StatusCode)
 	}
-	raw, e := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
+	raw, e := io.ReadAll(io.LimitReader(resp.Body, (1<<20)+1))
 	if e != nil {
 		return nil, e
 	}
+	if len(raw) > 1<<20 {
+		return nil, fmt.Errorf("通道响应过大")
+	}
+	return decodeProviderJSON(raw)
+}
+
+func decodeProviderJSON(raw []byte) (params, error) {
 	p := params{}
 	if len(raw) > 0 {
-		if e = json.Unmarshal(raw, &p); e != nil {
+		decoder := json.NewDecoder(bytes.NewReader(raw))
+		decoder.UseNumber()
+		if e := decoder.Decode(&p); e != nil {
 			return nil, fmt.Errorf("通道响应不是 JSON")
+		}
+		var extra any
+		if decoder.Decode(&extra) != io.EOF {
+			return nil, fmt.Errorf("通道响应不是单个JSON对象")
 		}
 	}
 	return p, nil
@@ -720,14 +742,15 @@ func (s *Server) sendExternal(ctx context.Context, kind string, c ChannelConfig,
 			return fmt.Errorf("提供方拒绝")
 		}
 	case "code":
-		if _, exists := p["code"]; !exists {
-			return fmt.Errorf("提供方缺少受理状态")
+		wanted := int64(0)
+		if kind == "bark" {
+			wanted = 200
 		}
-		if p.num("code") != 0 && !(kind == "bark" && p.num("code") == 200) {
+		if !providerCode(p, "code", wanted) {
 			return fmt.Errorf("提供方拒绝")
 		}
 	case "errcode", "retcode":
-		if _, ok := p[check]; !ok || p.num(check) != 0 {
+		if !providerCode(p, check, 0) || kind == "onebot" && p.str("status") != "ok" {
 			return fmt.Errorf("提供方拒绝")
 		}
 	}
@@ -735,6 +758,12 @@ func (s *Server) sendExternal(ctx context.Context, kind string, c ChannelConfig,
 		return fmt.Errorf("QQ未返回消息ID")
 	}
 	return nil
+}
+
+// A missing, null or malformed code must never be coerced into success (zero).
+func providerCode(p params, field string, wanted int64) bool {
+	code, err := strconv.ParseInt(p.str(field), 10, 64)
+	return err == nil && code == wanted
 }
 
 func renderWebhook(value any, m Message) any {

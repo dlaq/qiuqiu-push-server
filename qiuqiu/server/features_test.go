@@ -30,7 +30,10 @@ func TestProviderRequestsAndRefusal(t *testing.T) {
 		t.Run(kind, func(t *testing.T) {
 			sends := 0
 			s.client.Transport = transportFunc(func(r *http.Request) (*http.Response, error) {
-				response := `{"errcode":0,"code":0,"retcode":0,"ok":true,"id":"provider-id"}`
+				response := `{"errcode":0,"code":0,"retcode":0,"status":"ok","ok":true,"id":"provider-id"}`
+				if kind == "bark" {
+					response = `{"code":200,"message":"success"}`
+				}
 				if strings.Contains(r.URL.Path, "gettoken") || strings.HasSuffix(r.URL.Path, "/token") || strings.Contains(r.URL.Path, "getAppAccessToken") || strings.Contains(r.URL.Path, "tenant_access_token") {
 					response = `{"access_token":"test-token","tenant_access_token":"test-token","code":0,"errcode":0}`
 				} else {
@@ -65,6 +68,19 @@ func TestProviderRequestsAndRefusal(t *testing.T) {
 	})
 	if s.sendExternal(context.Background(), "wecom_bot", ChannelConfig{"url": "https://example.com"}, Message{Body: "test"}) == nil {
 		t.Fatal("false provider success")
+	}
+	for _, tc := range []struct{ kind, body string }{
+		{"wecom_bot", `{"errcode":"not-a-number"}`}, {"wecom_bot", `{"errcode":null}`}, {"wecom_bot", `{"errcode":false}`}, {"wecom_bot", `{"errcode":{}}`},
+		{"wecom_bot", `{"errcode":1e-999}`}, {"wecom_bot", `{"errcode":0} {"errcode":40001}`},
+		{"feishu_bot", `{"code":0.5}`}, {"feishu_bot", `{}`}, {"bark", `{"code":0}`}, {"onebot", `{"retcode":0,"status":"failed"}`},
+	} {
+		s.client.Transport = transportFunc(func(*http.Request) (*http.Response, error) {
+			return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader(tc.body))}, nil
+		})
+		c := ChannelConfig{"url": "https://example.com", "recipient": "123"}
+		if s.sendExternal(context.Background(), tc.kind, c, Message{Body: "test"}) == nil {
+			t.Fatalf("malformed %s response accepted: %s", tc.kind, tc.body)
+		}
 	}
 }
 
@@ -280,5 +296,44 @@ func TestNativeAdvancedNotificationValidation(t *testing.T) {
 	w = do(s, "POST", "/api/v1/push", strings.ReplaceAll(body, "https://example.com", "javascript:alert(1)"), key)
 	if w.Code != 400 {
 		t.Fatalf("unsafe action/attachment accepted: %d", w.Code)
+	}
+}
+
+func TestKeyDefaultRouteRoundTrip(t *testing.T) {
+	s, u, _ := testServer(t)
+	_, session, _ := s.store.login(u.Name, "alice-test-password")
+	response := do(s, "POST", "/api/v1/manage/channels", `{"name":"仅存档","kind":"store"}`, session)
+	var channel params
+	json.Unmarshal(response.Body.Bytes(), &channel)
+	if response.Code != 201 {
+		t.Fatalf("channel %d %s", response.Code, response.Body)
+	}
+	response = do(s, "POST", "/api/v1/manage/policies", encode(params{"name": "存档策略", "mode": "single", "steps": []params{{"channel_id": channel.str("id")}}}), session)
+	var policy params
+	json.Unmarshal(response.Body.Bytes(), &policy)
+	if response.Code != 201 {
+		t.Fatalf("policy %d %s", response.Code, response.Body)
+	}
+	token := issued(t, s, u, "native", Targets{Devices: []string{"DEV_a"}})
+	key, _ := s.store.key(token, "native")
+	response = do(s, "POST", "/api/v1/manage/keys/route", encode(params{"id": key.ID, "delivery_policy": policy.str("id")}), session)
+	if response.Code != 200 {
+		t.Fatalf("bind %d %s", response.Code, response.Body)
+	}
+	listed := do(s, "GET", "/api/v1/manage/keys", "", session)
+	if !strings.Contains(listed.Body.String(), policy.str("id")) {
+		t.Fatal("default policy not visible in credential list")
+	}
+	response = do(s, "POST", "/api/v1/push", `{"body":"走凭证默认策略"}`, token)
+	if response.Code != 202 {
+		t.Fatalf("send %d %s", response.Code, response.Body)
+	}
+	if err := s.deliverPending(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	var n int
+	s.store.QueryRow("SELECT count(*) FROM route_attempts WHERE state='stored' AND channel_id=?", channel.str("id")).Scan(&n)
+	if n != 1 {
+		t.Fatal("stored policy was not used")
 	}
 }

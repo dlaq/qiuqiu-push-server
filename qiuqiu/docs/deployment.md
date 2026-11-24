@@ -87,3 +87,7 @@ scripts/restore.sh /absolute/path/to/private-backup CONFIRM_REPLACE
 ## 2.1通道与回执升级
 
 使用1Panel+Nginx Proxy Manager的已有部署，采用`deploy/compose.1panel.yml`；两个域名都代理Gateway的`127.0.0.1:18081`，不需要Caddy。请开启NPM WebSocket支持、禁用SSE缓冲，并防止含密钥路径/Query的访问日志。升级前保留完整数据卷备份，包括新增的`channel.key`。配置与操作见[2.1升级说明](upgrade-2.1.md)，验证结果见[2.1本地报告](reports/2026-11-24-upgrade-2.1.md)。
+
+## Cloudflare代理的API客户端
+
+若返回Cloudflare `1010`，请求尚未进入Gateway。浏览器完整性检查可能拒绝默认的Python-urllib等User-Agent。脚本可明确设置`User-Agent: QiuQiuPush/2.1`；正式API域名应按[Cloudflare官方说明](https://developers.cloudflare.com/waf/tools/browser-integrity-check/)用主机名或路径规则跳过Browser Integrity Check，再复验默认客户端、JSON/FORM/Query和WebSocket。此项在Cloudflare控制台管理，NPM无法替代它的边缘规则。

@@ -401,7 +401,7 @@ func (s *Server) listResource(w http.ResponseWriter, r *http.Request, u User, re
 	case "bindings":
 		query = "SELECT td.topic_id,td.device_id FROM topic_devices td JOIN topics t ON t.id=td.topic_id WHERE t.user_id=?"
 	case "keys":
-		query = "SELECT id,kind,label,hint,targets,disabled,created_at,app_id FROM api_keys WHERE user_id=? ORDER BY created_at DESC"
+		query = "SELECT id,kind,label,hint,targets,disabled,created_at,app_id,coalesce((SELECT policy_id FROM key_routes r WHERE r.key_id=api_keys.id),'') delivery_policy FROM api_keys WHERE user_id=? ORDER BY created_at DESC"
 	case "messages":
 		query = "SELECT m.id,m.protocol,m.status,m.created_at,json_extract(m.payload,'$.title') AS title,json_extract(m.payload,'$.body') AS body,(SELECT count(*) FROM deliveries d WHERE d.message_id=m.id) target_count,(SELECT count(*) FROM receipts r WHERE r.message_id=m.id AND r.stage='received') received_count,(SELECT count(*) FROM receipts r WHERE r.message_id=m.id AND r.stage='notification_submitted') notified_count,(SELECT count(*) FROM receipts r WHERE r.message_id=m.id AND r.stage='opened') opened_count FROM messages m WHERE m.user_id=? ORDER BY m.created_at DESC LIMIT ? OFFSET ?"
 		args = append(args, limit, offset)
