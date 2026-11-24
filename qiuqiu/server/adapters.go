@@ -97,6 +97,9 @@ func parseParams(r *http.Request) (params, error) {
 			}
 		}
 	} else {
+		if r.Body == nil || r.Body == http.NoBody || r.ContentLength == 0 {
+			return p, nil
+		}
 		return nil, &AppError{415, "unsupported_media_type", "使用 JSON 或 FORM 请求"}
 	}
 	return p, nil
@@ -117,7 +120,8 @@ func pathParts(r *http.Request) []string {
 	return a
 }
 
-func adapt(r *http.Request) (*Message, string, string, error) {
+func adapt(r *http.Request) (*Message, string, string, error) { return adaptWithDecrypt(r, nil) }
+func adaptWithDecrypt(r *http.Request, decrypt func(string, params) (params, error)) (*Message, string, string, error) {
 	if r.Method != "GET" && r.Method != "POST" {
 		return nil, "", "", &AppError{405, "method_not_allowed", "仅支持 GET/POST"}
 	}
@@ -145,13 +149,32 @@ func adapt(r *http.Request) (*Message, string, string, error) {
 		m.Body = p.str("body")
 		m.Topic = p.str("topic")
 		m.Devices = p.list("device_ids")
+		for _, raw := range p.list("topic_ids") {
+			id, err := strconv.ParseInt(raw, 10, 64)
+			if err != nil || id <= 0 {
+				return nil, "", "", bad("TopicId无效")
+			}
+			m.TopicIDs = append(m.TopicIDs, id)
+		}
 		m.Business = p.str("business_type")
+		m.BusinessName = p.str("business_name")
+		m.Policy = p.str("delivery_policy")
+		m.IconURL = p.str("icon_url")
 		m.Icon = p.str("icon")
+		if strings.HasPrefix(m.Icon, "https://") {
+			m.IconURL = m.Icon
+			m.Icon = ""
+		}
 		m.Sound = p.str("sound")
 		m.Click = first(p.str("click"), p.str("click_url"))
 		m.Priority = p.num("priority")
 		m.ContentType = p.str("content_type")
 		m.Tags = p.list("tags")
+		m.Expires = int64(p.num("expires_at"))
+		m.Group = p.str("group")
+		if extras, ok := p["ntfy"].(map[string]any); ok {
+			m.Ntfy = params(extras)
+		}
 	case len(a) == 2 && a[0] == "sctapi" && strings.HasSuffix(a[1], ".send"):
 		m.Protocol = "serverchan"
 		kind = "serverchan"
@@ -194,6 +217,22 @@ func adapt(r *http.Request) (*Message, string, string, error) {
 		token = p.str("device_key")
 		if len(a) >= 2 && a[0] == "bark" {
 			token = a[1]
+		}
+		if p.str("ciphertext") != "" {
+			if decrypt == nil {
+				return nil, "", "", bad("需要配置Bark解密密钥")
+			}
+			plain, err := decrypt(first(token, strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")), p)
+			if err != nil {
+				return nil, "", "", err
+			}
+			for k, v := range plain {
+				if k != "device_key" && k != "token" {
+					p[k] = v
+				}
+			}
+		}
+		if len(a) >= 2 && a[0] == "bark" {
 			parts := a[2:]
 			switch len(parts) {
 			case 0:
@@ -221,6 +260,10 @@ func adapt(r *http.Request) (*Message, string, string, error) {
 		}
 		m.Sound = p.str("sound")
 		m.Icon = p.str("icon")
+		if strings.HasPrefix(m.Icon, "https://") {
+			m.IconURL = m.Icon
+			m.Icon = ""
+		}
 		m.Click = p.str("url")
 		switch p.str("level") {
 		case "passive":
@@ -232,6 +275,21 @@ func adapt(r *http.Request) (*Message, string, string, error) {
 			if p.str(k) != "" {
 				m.Warnings = append(m.Warnings, k+" 受 Android 系统限制，不保证实现 iOS 行为")
 			}
+		}
+	case path == "/api/send/message/simple-push" || len(a) == 5 && a[0] == "api" && a[1] == "send" && a[2] == "message":
+		m.Protocol = "wxpusher"
+		kind = "wxpusher_spt"
+		token = first(p.str("spt"), p.str("simplePushToken"))
+		m.Body = p.str("content")
+		if len(a) == 5 {
+			token = a[3]
+			m.Body = a[4]
+		}
+		m.Title = p.str("summary")
+		m.Click = p.str("url")
+		m.ContentType = map[int]string{0: "text", 1: "text", 2: "html", 3: "markdown"}[p.num("contentType")]
+		if m.ContentType == "" {
+			return nil, "", "", bad("contentType必须为1/2/3")
 		}
 	case path == "/api/send/message":
 		m.Protocol = "wxpusher"
@@ -248,7 +306,11 @@ func adapt(r *http.Request) (*Message, string, string, error) {
 		if u := p.str("uid"); u != "" {
 			m.UIDs = append(m.UIDs, u)
 		}
-		for _, s := range p.list("topicIds") {
+		ids := p.list("topicIds")
+		if p.str("topicId") != "" {
+			ids = append(ids, p.str("topicId"))
+		}
+		for _, s := range ids {
 			id, e := strconv.ParseInt(s, 10, 64)
 			if e != nil || id <= 0 {
 				return nil, "", "", bad("TopicId 无效")
@@ -264,6 +326,8 @@ func adapt(r *http.Request) (*Message, string, string, error) {
 	default:
 		return nil, "", "", &AppError{404, "not_found", "接口不存在"}
 	}
+	// QiuQiu extension, shared by every compatibility format.
+	m.Policy = p.str("delivery_policy")
 	if m.Protocol == "serverchan" || m.Protocol == "sc3" || m.Protocol == "pushbear" {
 		m.Title = first(p.str("title"), p.str("text"))
 		m.Body = first(p.str("desp"), p.str("short"), m.Title)
@@ -298,6 +362,12 @@ func success(w http.ResponseWriter, m *Message) {
 		data := []any{}
 		for _, uid := range m.UIDs {
 			data = append(data, map[string]any{"uid": uid, "messageContentId": m.ContentID, "code": 1000, "status": "创建发送任务成功"})
+		}
+		for _, topic := range m.TopicIDs {
+			data = append(data, params{"topicId": topic, "messageContentId": m.ContentID, "code": 1000, "status": "创建发送任务成功"})
+		}
+		if len(data) == 0 {
+			data = append(data, params{"messageContentId": m.ContentID, "code": 1000, "status": "创建发送任务成功"})
 		}
 		respond(w, 200, map[string]any{"code": 1000, "msg": "处理成功", "success": true, "data": data, "message_id": m.ID, "warnings": m.Warnings})
 	default:

@@ -58,6 +58,18 @@ func (s *Server) manage(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	resource := strings.TrimPrefix(path, "/api/v1/manage/")
+	if handled, err := s.uploadIcon(w, r, u); handled {
+		return err
+	}
+	if handled, err := s.barkCryptoManage(w, r, u, resource); handled {
+		return err
+	}
+	if handled, err := s.channelManage(w, r, u, resource); handled {
+		return err
+	}
+	if handled, err := s.trackingManage(w, r, u, resource); handled {
+		return err
+	}
 	if method == "GET" {
 		return s.listResource(w, r, u, resource)
 	}
@@ -173,20 +185,50 @@ func (s *Server) manage(w http.ResponseWriter, r *http.Request) error {
 			return nil
 		case "test":
 			var p struct {
-				Device   string `json:"device_id"`
-				Business string `json:"business_type"`
+				Device string  `json:"device_id"`
+				Title  *string `json:"title"`
+				Body   *string `json:"body"`
+				Message
 			}
 			if e = decode(r, &p); e != nil {
 				return e
 			}
-			targets := Targets{Devices: []string{p.Device}}
+			targets := Targets{Devices: p.Devices, Topics: p.TopicIDs}
+			if p.Device != "" {
+				targets.Devices = append(targets.Devices, p.Device)
+			}
 			if e = s.store.ownedTargets(u.ID, targets); e != nil {
 				return e
 			}
 			k := Key{ID: "test:" + u.ID, UserID: u.ID, Targets: targets}
-			m := &Message{Title: "球球推送测试", Body: "通知链路测试，请核对图标、声音和接收时间。", Business: p.Business, Protocol: "native", Priority: 4}
+			m := &p.Message
+			m.Title = "球球推送测试"
+			if p.Title != nil {
+				m.Title = *p.Title
+			}
+			m.Body = "通知链路测试，请核对图标、声音和接收时间。"
+			if p.Body != nil {
+				m.Body = *p.Body
+			}
+			m.Protocol = "native"
+			m.Test = true
+			if m.Expires > 0 && m.Expires <= time.Now().Unix() {
+				return bad("测试消息已过期")
+			}
+			if m.Priority == 0 {
+				m.Priority = 4
+			}
 			if e = validateMessage(m); e != nil {
 				return e
+			}
+			if e = s.checkCallback(m.Callback); e != nil {
+				return e
+			}
+			if e = s.checkPolicy(u.ID, m); e != nil {
+				return e
+			}
+			if m.ContentType == "html" {
+				m.Body = htmlPolicy.Sanitize(m.Body)
 			}
 			devices, e := s.store.resolve(k, m)
 			if e != nil {
@@ -361,7 +403,7 @@ func (s *Server) listResource(w http.ResponseWriter, r *http.Request, u User, re
 	case "keys":
 		query = "SELECT id,kind,label,hint,targets,disabled,created_at,app_id FROM api_keys WHERE user_id=? ORDER BY created_at DESC"
 	case "messages":
-		query = "SELECT id,protocol,status,created_at,json_extract(payload,'$.title') AS title,json_extract(payload,'$.body') AS body FROM messages WHERE user_id=? ORDER BY created_at DESC LIMIT ? OFFSET ?"
+		query = "SELECT m.id,m.protocol,m.status,m.created_at,json_extract(m.payload,'$.title') AS title,json_extract(m.payload,'$.body') AS body,(SELECT count(*) FROM deliveries d WHERE d.message_id=m.id) target_count,(SELECT count(*) FROM receipts r WHERE r.message_id=m.id AND r.stage='received') received_count,(SELECT count(*) FROM receipts r WHERE r.message_id=m.id AND r.stage='notification_submitted') notified_count,(SELECT count(*) FROM receipts r WHERE r.message_id=m.id AND r.stage='opened') opened_count FROM messages m WHERE m.user_id=? ORDER BY m.created_at DESC LIMIT ? OFFSET ?"
 		args = append(args, limit, offset)
 	case "deliveries":
 		query = "SELECT d.id,d.message_id,d.device_id,d.status,d.attempts,d.error,d.ntfy_id FROM deliveries d JOIN messages m ON m.id=d.message_id WHERE m.user_id=? ORDER BY d.id DESC LIMIT ? OFFSET ?"

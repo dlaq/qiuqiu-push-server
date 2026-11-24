@@ -88,8 +88,11 @@ func (s *Server) provisionDevice(ctx context.Context, uid, name string) (map[str
 	return map[string]any{"device_id": id, "user_id": uid, "device_token": deviceToken, "ntfy_token": token.Token, "ntfy_username": username, "topic": inbox, "ntfy_url": s.cfg.NtfyPublicURL}, nil
 }
 func (s *Server) publish(ctx context.Context, m Message, topic string) (string, error) {
-	meta := map[string]any{"message_id": m.ID, "business_type": m.Business, "icon": m.Icon, "sound": m.Sound, "source_protocol": m.Protocol, "content_type": m.ContentType, "group": m.Group}
+	meta := map[string]any{"message_id": m.ID, "business_type": m.Business, "business_name": m.BusinessName, "icon": m.Icon, "sound": m.Sound, "source_protocol": m.Protocol, "content_type": m.ContentType, "group": m.Group}
 	body := map[string]any{"topic": topic, "title": m.Title, "message": m.Body, "priority": m.Priority, "click": m.Click, "tags": m.Tags, "markdown": m.ContentType == "markdown", "sequence_id": first(m.Sequence, m.ID), "qiuqiu": meta}
+	if m.IconURL != "" {
+		body["icon"] = m.IconURL
+	}
 	if m.Ntfy != nil {
 		for _, field := range []string{"actions", "icon", "encoding"} {
 			if v, ok := m.Ntfy[field]; ok {
@@ -130,10 +133,30 @@ func (s *Server) runWorker(ctx context.Context) {
 	}
 }
 func (s *Server) deliverPending(ctx context.Context) error {
+	if _, e := s.store.Exec("UPDATE route_attempts SET state='received',detail='设备已保存消息' WHERE state='waiting_receipt' AND EXISTS(SELECT 1 FROM receipts r JOIN deliveries d ON d.message_id=r.message_id AND d.device_id=r.device_id WHERE d.id=route_attempts.delivery_id AND r.stage='received')"); e != nil {
+		return e
+	}
+	if _, e := s.store.Exec("UPDATE route_attempts SET state='receipt_timeout',detail='规定时间内未收到回执，终端接收未知' WHERE state='waiting_receipt' AND deadline<=?", time.Now().Unix()); e != nil {
+		return e
+	}
+	if e := s.autoFallbacks(ctx); e != nil {
+		return e
+	}
 	if _, err := s.store.Exec("UPDATE messages SET status=CASE WHEN EXISTS(SELECT 1 FROM deliveries WHERE message_id=messages.id AND status='failed') THEN 'failed' ELSE 'published' END WHERE status='accepted' AND EXISTS(SELECT 1 FROM deliveries WHERE message_id=messages.id) AND NOT EXISTS(SELECT 1 FROM deliveries WHERE message_id=messages.id AND status IN ('pending','sending'))"); err != nil {
 		return err
 	}
-	rows, e := s.store.list("SELECT d.id,d.message_id,d.topic,d.attempts,m.payload FROM deliveries d JOIN messages m ON m.id=d.message_id WHERE d.status='pending' AND d.attempts<3 ORDER BY d.id LIMIT 50")
+	if _, e := s.store.Exec("UPDATE deliveries SET status='failed',error='消息已过期' WHERE status='pending' AND message_id IN(SELECT id FROM messages WHERE created_at<? OR coalesce(json_extract(payload,'$.expires_at'),0)>0 AND json_extract(payload,'$.expires_at')<=?)", time.Now().Add(-168*time.Hour).Unix(), time.Now().Unix()); e != nil {
+		return e
+	}
+	online := []string{}
+	s.directMu.Lock()
+	for id := range s.direct {
+		online = append(online, id)
+	}
+	s.directMu.Unlock()
+	// Offline direct-only devices must not occupy all queue slots and delay FCM
+	// or external channels. New work precedes routes already waiting for receipts.
+	rows, e := s.store.list("SELECT d.id,d.message_id,d.device_id,d.topic,d.attempts,m.payload FROM deliveries d JOIN messages m ON m.id=d.message_id LEFT JOIN device_profiles p ON p.device_id=d.device_id WHERE d.status='pending' AND d.attempts<3 AND (coalesce(p.mode,'fcm')<>'direct' OR coalesce(json_extract(m.payload,'$.delivery_policy'),'')<>'' OR d.device_id IN(SELECT value FROM json_each(?))) ORDER BY coalesce((SELECT max(a.started_at) FROM route_attempts a WHERE a.delivery_id=d.id),0),d.id LIMIT 50", encode(online))
 	if e != nil {
 		return e
 	}
@@ -151,16 +174,34 @@ func (s *Server) deliverPending(ctx context.Context) error {
 		if e != nil {
 			return e
 		}
-		if disabled == 0 || m.Expires > 0 && m.Expires <= time.Now().Unix() {
+		if disabled == 0 || m.Expires > 0 && m.Expires <= time.Now().Unix() || m.CreatedAt < time.Now().Add(-168*time.Hour).Unix() {
 			_, e = s.store.Exec("UPDATE deliveries SET status='failed',error='目标已禁用或消息已过期' WHERE id=?", id)
 			if e != nil {
 				return e
 			}
+		} else if m.Policy != "" {
+			state, routeErr := s.processRoute(ctx, row["id"].(int64), row["device_id"].(string), row["topic"].(string), m)
+			if routeErr != nil {
+				return routeErr
+			}
+			if _, e = s.store.Exec("UPDATE deliveries SET status=? WHERE id=?", state, id); e != nil {
+				return e
+			}
 		} else {
+			var mode string
+			_ = s.store.QueryRow("SELECT mode FROM device_profiles WHERE device_id=?", row["device_id"]).Scan(&mode)
+			if mode == "direct" {
+				s.directMu.Lock()
+				connected := s.direct[row["device_id"].(string)] != nil
+				s.directMu.Unlock()
+				if !connected {
+					continue
+				}
+			}
 			if _, e = s.store.Exec("UPDATE deliveries SET status='sending',attempts=attempts+1 WHERE id=?", id); e != nil {
 				return e
 			}
-			ntfyID, sendErr := s.publish(ctx, m, row["topic"].(string))
+			ntfyID, sendErr := s.dispatchDevice(ctx, row["device_id"].(string), m, row["topic"].(string))
 			state, errText := "published", ""
 			if sendErr != nil {
 				state = "pending"

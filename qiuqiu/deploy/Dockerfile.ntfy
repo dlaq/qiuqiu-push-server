@@ -18,7 +18,7 @@ RUN go mod download
 COPY . ./
 COPY --from=web /src/web/build ./server/site
 COPY --from=docs /src/server/docs ./server/docs
-RUN CGO_ENABLED=1 go build -trimpath -tags 'netgo osusergo' -ldflags '-s -w -linkmode external -extldflags "-static" -X main.version=2.38.1-qiuqiu.2' -o /ntfy .
+RUN CGO_ENABLED=1 go build -trimpath -tags 'netgo osusergo' -ldflags '-s -w -linkmode external -extldflags "-static" -X main.version=2.38.1-qiuqiu.3' -o /ntfy .
 FROM alpine:3.23
 RUN apk add --no-cache ca-certificates tzdata && mkdir -p /var/lib/ntfy /run/ntfy
 COPY --from=build /ntfy /usr/local/bin/ntfy

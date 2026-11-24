@@ -13,30 +13,35 @@ import (
 )
 
 type Message struct {
-	Sequence    string   `json:"sequence_id,omitempty"`
-	Ntfy        params   `json:"ntfy,omitempty"`
-	ContentID   int64    `json:"message_content_id,omitempty"`
-	Group       string   `json:"group,omitempty"`
-	ID          string   `json:"message_id"`
-	UserID      string   `json:"user_id"`
-	Devices     []string `json:"device_ids"`
-	UIDs        []string `json:"uids,omitempty"`
-	TopicIDs    []int64  `json:"topic_ids,omitempty"`
-	Topic       string   `json:"topic"`
-	Business    string   `json:"business_type"`
-	Title       string   `json:"title"`
-	Body        string   `json:"body"`
-	ContentType string   `json:"content_type"`
-	Priority    int      `json:"priority"`
-	Icon        string   `json:"icon"`
-	Sound       string   `json:"sound"`
-	Click       string   `json:"click_url"`
-	Tags        []string `json:"tags"`
-	CreatedAt   int64    `json:"created_at"`
-	Protocol    string   `json:"source_protocol"`
-	Warnings    []string `json:"warnings,omitempty"`
-	Callback    string   `json:"callback_url,omitempty"`
-	Expires     int64    `json:"expires_at,omitempty"`
+	Policy         string          `json:"delivery_policy,omitempty"`
+	PolicySnapshot *DeliveryPolicy `json:"delivery_policy_snapshot,omitempty"`
+	Test           bool            `json:"is_test,omitempty"`
+	BusinessName   string          `json:"business_name,omitempty"`
+	IconURL        string          `json:"icon_url,omitempty"`
+	Sequence       string          `json:"sequence_id,omitempty"`
+	Ntfy           params          `json:"ntfy,omitempty"`
+	ContentID      int64           `json:"message_content_id,omitempty"`
+	Group          string          `json:"group,omitempty"`
+	ID             string          `json:"message_id"`
+	UserID         string          `json:"user_id"`
+	Devices        []string        `json:"device_ids"`
+	UIDs           []string        `json:"uids,omitempty"`
+	TopicIDs       []int64         `json:"topic_ids,omitempty"`
+	Topic          string          `json:"topic"`
+	Business       string          `json:"business_type"`
+	Title          string          `json:"title"`
+	Body           string          `json:"body"`
+	ContentType    string          `json:"content_type"`
+	Priority       int             `json:"priority"`
+	Icon           string          `json:"icon"`
+	Sound          string          `json:"sound"`
+	Click          string          `json:"click_url"`
+	Tags           []string        `json:"tags"`
+	CreatedAt      int64           `json:"created_at"`
+	Protocol       string          `json:"source_protocol"`
+	Warnings       []string        `json:"warnings,omitempty"`
+	Callback       string          `json:"callback_url,omitempty"`
+	Expires        int64           `json:"expires_at,omitempty"`
 }
 type Targets struct {
 	Devices []string `json:"device_ids"`
@@ -78,6 +83,61 @@ var businesses = map[string]bool{"server": true, "security": true, "email": true
 var sounds = map[string]bool{"default": true, "alarm": true, "soft": true, "silent": true}
 
 func validateMessage(m *Message) error {
+	if m.Ntfy != nil {
+		for field := range m.Ntfy {
+			if field != "attachment" && field != "actions" {
+				return bad("ntfy扩展只支持attachment和actions")
+			}
+		}
+		if len(encode(m.Ntfy)) > 16384 {
+			return bad("附件和操作配置过大")
+		}
+		if attachment, exists := m.Ntfy["attachment"]; exists {
+			a, ok := attachment.(map[string]any)
+			if !ok {
+				return bad("附件配置需要JSON对象")
+			}
+			u, e := url.Parse(params(a).str("url"))
+			if e != nil || u.Scheme != "https" || u.Hostname() == "" || u.User != nil {
+				return bad("附件需要HTTPS地址")
+			}
+			if len(params(a).str("name")) > 255 {
+				return bad("附件名称过长")
+			}
+		}
+		if actions, exists := m.Ntfy["actions"]; exists {
+			a, ok := actions.([]any)
+			if !ok || len(a) > 3 {
+				return bad("最多3个通知操作")
+			}
+			for _, raw := range a {
+				action, ok := raw.(map[string]any)
+				if !ok {
+					return bad("操作需要JSON对象")
+				}
+				p := params(action)
+				if p.str("label") == "" || len(p.str("label")) > 100 {
+					return bad("操作需要有效的显示名称")
+				}
+				if p.str("action") != "view" && p.str("action") != "http" {
+					return bad("球球操作支持view和http；完整ntfy操作使用ntfy原生接口")
+				}
+				u, e := url.Parse(p.str("url"))
+				if e != nil || u.Scheme != "https" || u.Hostname() == "" || u.User != nil {
+					return bad("通知操作需要HTTPS地址")
+				}
+			}
+		}
+	}
+	if len(m.BusinessName) > 100 {
+		return bad("业务显示名过长")
+	}
+	if m.IconURL != "" {
+		u, e := url.Parse(m.IconURL)
+		if e != nil || u.Scheme != "https" || u.Hostname() == "" || u.User != nil || len(m.IconURL) > 2048 {
+			return bad("自定义图标必须是 HTTPS 地址")
+		}
+	}
 	if strings.TrimSpace(m.Body) == "" {
 		return bad("消息正文不能为空")
 	}

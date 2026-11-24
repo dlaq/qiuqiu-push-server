@@ -33,6 +33,7 @@ type QiuQiuMetadata struct {
 	Group          string `json:"group,omitempty"`
 	MessageID      string `json:"message_id,omitempty"`
 	BusinessType   string `json:"business_type,omitempty"`
+	BusinessName   string `json:"business_name,omitempty"`
 	Icon           string `json:"icon,omitempty"`
 	Sound          string `json:"sound,omitempty"`
 	SourceProtocol string `json:"source_protocol,omitempty"`

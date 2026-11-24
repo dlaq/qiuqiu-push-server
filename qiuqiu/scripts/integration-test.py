@@ -74,10 +74,22 @@ for index,d in enumerate(paired):
  assert attachment_body=='integration attachment'
  assert request('/'+d['topic']+'/json?poll=1',headers={'Host':'ntfy.localhost'},raw=True)[0]==403
 assert request('/'+paired[1]['topic']+'/json?poll=1',token=paired[0]['ntfy_token'],headers={'Host':'ntfy.localhost'},raw=True)[0]==403
+# Live tracking is backed by the actual delivery rows and authenticated receipt.
+tracked=messages[0]['id']
+receipt={'receipts':[{'message_id':tracked,'stage':'received'},{'message_id':tracked,'stage':'notification_submitted'}]}
+ack=must('/api/v1/device/receipts',receipt,paired[0]['device_token'])
+assert all(x['status']=='recorded' for x in ack['results'])
+trace=must('/api/v1/manage/messages/'+tracked,token=session)
+assert len(trace['deliveries'])==2 and len(trace['receipts'])==2
+assert any(x['stage']=='received' for x in trace['events'])
+assert any(x['stage']=='notification_submitted' for x in trace['events'])
+must('/api/v1/manage/devices/profile',{'id':paired[0]['device_id'],'name':'友好的手机名称','alias':'my-phone'},session,method='PATCH')
+alias=must('/api/v1/push',{'body':'别名目标','device_ids':['my-phone']},keys['native']['token'])
+assert must('/api/v1/messages/'+alias['message_id'],token=keys['native']['token'])['deliveries'][0]['device_name']=='友好的手机名称'
 # Revocation applies in ntfy, not only in the gateway's database.
 must('/api/v1/manage/keys',{'id':native['id'],'disabled':True},session,method='PATCH')
 assert request('/'+group,'revoked',native['token'],headers={'Host':'ntfy.localhost'})[0]==401
 must('/api/v1/manage/devices',{'id':paired[0]['device_id'],'disabled':True},session,method='PATCH')
 assert request('/'+paired[0]['topic']+'/json?poll=1',token=paired[0]['ntfy_token'],headers={'Host':'ntfy.localhost'},raw=True)[0]==401
-result={'result':'passed','protocols':7,'devices':2,'checks':['one-time pairing','all adapters publish via real ntfy','private cache authentication','cross-device isolation','native group fanout','native actions preserved','native attachment accessible','long Chinese body preserved','business metadata','upstream key and device revocation'],'firebase':'not configured; no cloud delivery claimed','test_user':name}
+result={'result':'passed','protocols':7,'devices':2,'checks':['one-time pairing','all adapters publish via real ntfy','private cache authentication','cross-device isolation','native group fanout','native actions preserved','native attachment accessible','long Chinese body preserved','business metadata','authenticated phone receipts','persistent delivery events','friendly device alias','sender status scope','upstream key and device revocation'],'firebase':'not configured; no cloud delivery claimed','test_user':name}
 print(json.dumps(result,ensure_ascii=False,indent=2))

@@ -1,8 +1,8 @@
-# 球球推送 QiuQiu Push V2.0
+# 球球推送 QiuQiu Push V2.1
 
 自建 ntfy / FCM 推送、Android Play 客户端、多协议 API 与管理后台。
 
-本目录包含球球推送后台源码；ntfy Fork 源码位于上一级仓库根目录。Android 客户端另见 https://github.com/dlaq/qiuqiu-push-android 。**Firebase、正式域名和 OPPO Find N5 尚未接入；当前提供的 APK 为“需要配置 Firebase”的签名 Release 构建，不能直接声称已经具备可用的云端推送。** 本地测试使用真实 ntfy 服务与独立测试数据库，未调用 Server酱、PushPlus、Bark 或 WxPusher 官方投递服务。
+本目录包含球球推送后台源码；ntfy Fork 源码位于上一级仓库根目录。Android 客户端另见 https://github.com/dlaq/qiuqiu-push-android 。新增接收回执、实时测试进度、用户可选直连与多通道策略，见 [2.1操作及兼容边界](docs/upgrade-2.1.md)。Firebase配置和签名密钥不进入Git。真实FCM、OPPO Find N5和第三方生产账号仍需单独验收。
 
 ## 从哪里开始
 
@@ -25,7 +25,7 @@
 
 ## 关键行为
 
-Android 仅使用 FCM 作为后台消息入口；收到私有 Topic 的 `poll_request` 后进行一次带认证的 HTTP 获取，并在失败时最多有限重试。没有周期消息同步、前台保活或后台订阅连接。APP 的账户会话仅保存在内存，设备读取凭证使用 Android Keystore 加密后存储。
+Android 默认使用 FCM；收到私有 Topic 的 `poll_request` 后进行一次认证HTTP获取和有限重试，没有应用主动周期同步。用户也可开启后台直连或自动选择，此时显示常驻通知并维护WebSocket。接收回执由消息事件触发上传。设备凭证使用Android Keystore加密保存；服务器受理、手机接收和系统通知提交分别记录。
 
 `push.<域名>` 提供兼容接口与后台；`ntfy.<域名>` 保留原生请求路径、缓存、Actions、附件和用户认证。Gateway 通过 ntfy 的本地管理 socket 配置真实 ACL，不持有 Firebase 服务端凭证。原生 Topic 群发使用后台签发时返回的隔离 Topic 名称，避免不同用户同名 Topic 冲突。
 

@@ -183,7 +183,7 @@ func TestValidationAndEncoding(t *testing.T) {
 		path, body string
 		status     int
 	}{
-		{"/push", `{"device_key":"bad","body":"正文","icon":"https://evil/icon"}`, 400},
+		{"/push", `{"device_key":"bad","body":"正文","icon":"http://evil/icon"}`, 400},
 		{"/api/v1/push", `{"body":"正文","click":"javascript:alert(1)"}`, 400},
 		{"/api/v1/push", `{"body":""}`, 400},
 		{"/api/v1/push", `{"body":"hello","priority":9}`, 400},

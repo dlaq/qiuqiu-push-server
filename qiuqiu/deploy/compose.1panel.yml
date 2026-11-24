@@ -1,0 +1,71 @@
+name: qiuqiu-push
+
+services:
+  gateway:
+    image: ${DOCKERHUB_NAMESPACE:?set DOCKERHUB_NAMESPACE}/qiuqiu-push-gateway:${QQ_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18081:8080"
+    environment:
+      QQ_NTFY_URL: http://ntfy:80
+      QQ_NTFY_PUBLIC_URL: https://${NTFY_DOMAIN}
+      QQ_NTFY_HOST: ${NTFY_DOMAIN}
+      QQ_ADMIN_PASSWORD_FILE: /run/secrets/admin_password
+      QQ_NTFY_ADMIN_PASSWORD_FILE: /run/secrets/ntfy_admin_password
+      QQ_NTFY_ADMIN_SOCKET: /run/ntfy/admin.sock
+      QQ_CALLBACK_ALLOWLIST: ${QQ_CALLBACK_ALLOWLIST:-}
+    secrets:
+      - admin_password
+      - ntfy_admin_password
+    volumes:
+      - gateway_data:/data
+      - ntfy_socket:/run/ntfy
+    depends_on:
+      - ntfy
+    networks:
+      - backend
+
+  ntfy:
+    image: ${DOCKERHUB_NAMESPACE:?set DOCKERHUB_NAMESPACE}/qiuqiu-push-ntfy:${QQ_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    environment:
+      NTFY_BASE_URL: https://${NTFY_DOMAIN}
+      NTFY_LISTEN_HTTP: :80
+      NTFY_EXPERIMENTAL_LISTEN_ADMIN_UNIX: /run/ntfy/admin.sock
+      NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
+      NTFY_AUTH_DEFAULT_ACCESS: deny-all
+      NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
+      NTFY_CACHE_DURATION: 168h
+      NTFY_MESSAGE_SIZE_LIMIT: 64k
+      NTFY_ATTACHMENT_CACHE_DIR: /var/lib/ntfy/attachments
+      NTFY_ENABLE_LOGIN: "true"
+      NTFY_ENABLE_SIGNUP: "false"
+      NTFY_BEHIND_PROXY: "true"
+      NTFY_FIREBASE_KEY_FILE: /run/secrets/firebase-adminsdk.json
+    secrets:
+      - ntfy_admin_hash
+      - source: firebase_credentials
+        target: firebase-adminsdk.json
+    volumes:
+      - ntfy_data:/var/lib/ntfy
+      - ntfy_socket:/run/ntfy
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  gateway_data:
+  ntfy_data:
+  ntfy_socket:
+
+secrets:
+  admin_password:
+    file: ./secrets/admin_password
+  ntfy_admin_password:
+    file: ./secrets/ntfy_admin_password
+  ntfy_admin_hash:
+    file: ./secrets/ntfy_admin_hash
+  firebase_credentials:
+    file: ./secrets/firebase-adminsdk.json

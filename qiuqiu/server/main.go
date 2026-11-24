@@ -20,14 +20,18 @@ import (
 
 type Config struct{ Listen, Database, NtfyURL, NtfyPublicURL, NtfyHost, AdminDir, AdminName, AdminPassword, NtfyAdminName, NtfyAdminPassword, NtfySocket, AllowedCallbacks string }
 type Server struct {
-	store       *Store
-	cfg         Config
-	client      *http.Client
-	adminClient *http.Client
-	wake        chan struct{}
-	provision   sync.Mutex
-	limiterMu   sync.Mutex
-	buckets     map[string]bucket
+	store           *Store
+	cfg             Config
+	client          *http.Client
+	adminClient     *http.Client
+	wake            chan struct{}
+	provision       sync.Mutex
+	limiterMu       sync.Mutex
+	buckets         map[string]bucket
+	directMu        sync.Mutex
+	direct          map[string]*directClient
+	externalClients map[string]*directClient
+	channelKey      []byte
 }
 type bucket struct {
 	Time  time.Time
@@ -63,6 +67,12 @@ func newServer(cfg Config) (*Server, error) {
 		return nil, e
 	}
 	s := &Server{store: st, cfg: cfg, client: &http.Client{Timeout: 15 * time.Second}, wake: make(chan struct{}, 1), buckets: map[string]bucket{}}
+	s.direct = map[string]*directClient{}
+	s.externalClients = map[string]*directClient{}
+	if e = s.initChannels(); e != nil {
+		st.Close()
+		return nil, e
+	}
 	s.adminClient = s.client
 	if cfg.NtfySocket != "" {
 		s.adminClient = &http.Client{Timeout: 15 * time.Second, Transport: &http.Transport{DialContext: func(ctx context.Context, _, _ string) (net.Conn, error) {
@@ -148,6 +158,35 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ip, _, _ := net.SplitHostPort(r.RemoteAddr)
+	if strings.HasPrefix(r.URL.Path, "/api/v1/messages/") {
+		if e := s.senderMessageHTTP(w, r); e != nil {
+			fail(w, r, e)
+		}
+		return
+	}
+	if strings.HasPrefix(r.URL.Path, "/api/v1/icons/") {
+		s.iconHTTP(w, r)
+		return
+	}
+	if strings.HasPrefix(r.URL.Path, "/api/v1/onebot/reverse/") {
+		s.oneBotReverseHTTP(w, r)
+		return
+	}
+	if strings.HasPrefix(r.URL.Path, "/api/register_client/") {
+		s.legacyClientHTTP(w, r)
+		return
+	}
+	if r.URL.Path == "/api/v1/ws" || r.URL.Path == "/api/v1/device/ws" {
+		s.websocketHTTP(w, r)
+		return
+	}
+	if strings.HasPrefix(r.URL.Path, "/api/v1/device/") {
+		r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+		if e := s.deviceHTTP(w, r); e != nil {
+			fail(w, r, e)
+		}
+		return
+	}
 	if r.URL.Path == "/api/v1/login" || r.URL.Path == "/api/v1/pair/claim" {
 		if !s.limit("login:"+ip, 20) {
 			fail(w, r, &AppError{429, "rate_limited", "请求过于频繁"})
@@ -181,7 +220,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
-	m, token, kind, e := adapt(r)
+	if handled, err := s.compatibilityBatch(w, r); handled {
+		if err != nil {
+			fail(w, r, err)
+		}
+		return
+	}
+	m, token, kind, e := adaptWithDecrypt(r, s.decryptBark)
 	if e != nil {
 		fail(w, r, e)
 		return
@@ -192,6 +237,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.store.usage(k)
+	if m.Policy == "" {
+		_ = s.store.QueryRow("SELECT policy_id FROM key_routes WHERE key_id=?", k.ID).Scan(&m.Policy)
+	}
+	if e = s.checkPolicy(k.UserID, m); e != nil {
+		fail(w, r, e)
+		return
+	}
 	if !s.limit("key:"+k.ID, 120) {
 		fail(w, r, &AppError{429, "rate_limited", "每个凭证每分钟最多120次请求"})
 		return

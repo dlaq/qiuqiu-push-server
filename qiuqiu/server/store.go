@@ -48,6 +48,10 @@ func openStore(path string) (*Store, error) {
 	if _, e = db.Exec("PRAGMA busy_timeout=5000"); e != nil {
 		return nil, e
 	}
+	if _, e = db.Exec(trackingSchema); e != nil {
+		db.Close()
+		return nil, e
+	}
 	return &Store{db}, nil
 }
 func (s *Store) addUser(name, password, role string) (User, error) {
@@ -134,7 +138,7 @@ func (s *Store) issueKey(uid, app, kind, label string, t Targets) (map[string]an
 			return nil, forbidden()
 		}
 	}
-	prefix := map[string]string{"native": "qq_", "serverchan": "SCT", "sc3": "sctp" + sc3UID(uid) + "t", "pushplus": "pp_", "bark": "bk_", "wxpusher": "AT_"}[kind]
+	prefix := map[string]string{"native": "qq_", "serverchan": "SCT", "sc3": "sctp" + sc3UID(uid) + "t", "pushplus": "pp_", "bark": "bk_", "wxpusher": "AT_", "wxpusher_spt": "SPT_"}[kind]
 	if prefix == "" {
 		return nil, bad("未知凭证类型")
 	}
@@ -181,6 +185,15 @@ func (s *Store) devicesForTargets(uid string, t Targets) (map[string]Device, err
 	return out, nil
 }
 func (s *Store) resolve(k Key, m *Message) ([]Device, error) {
+	for i, id := range m.Devices {
+		if !strings.HasPrefix(id, "DEV_") {
+			var resolved string
+			if e := s.QueryRow("SELECT d.id FROM devices d JOIN device_profiles p ON p.device_id=d.id WHERE d.user_id=? AND p.alias=? AND d.disabled=0", k.UserID, k.UserID+":"+id).Scan(&resolved); e != nil {
+				return nil, forbidden()
+			}
+			m.Devices[i] = resolved
+		}
+	}
 	if len(m.Devices)+len(m.UIDs)+len(m.TopicIDs) > 2000 {
 		return nil, bad("目标过多")
 	}
