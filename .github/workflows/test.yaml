@@ -41,9 +41,13 @@ jobs:
           node-version: '24'
           cache: 'npm'
           cache-dependency-path: './web/package-lock.json'
-      - name: Install dependencies
-        timeout-minutes: 10 # A stalled apt mirror must fail the run, not hang it
-        run: make build-deps-ubuntu
+      - name: Check native test dependencies
+        # Hosted runners already provide gcc and Python. The test jobs do not
+        # cross-compile; installing MinGW/QEMU/ARM compilers caused apt timeouts.
+        run: |
+          gcc --version
+          python3 -m venv venv
+          venv/bin/python -m pip --version
       - name: Build docs (required for tests)
         run: make docs
       - name: Build web app (required for tests)
