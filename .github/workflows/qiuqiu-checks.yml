@@ -1,0 +1,55 @@
+name: QiuQiu checks
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'qiuqiu/server/**'
+      - 'qiuqiu/admin/**'
+      - '.github/workflows/qiuqiu-checks.yml'
+  pull_request:
+    paths:
+      - 'qiuqiu/server/**'
+      - 'qiuqiu/admin/**'
+      - '.github/workflows/qiuqiu-checks.yml'
+permissions:
+  contents: read
+jobs:
+  gateway:
+    name: Gateway race tests (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: qiuqiu/server
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: qiuqiu/server/go.mod
+          cache-dependency-path: qiuqiu/server/go.sum
+      - run: go test -race ./... -timeout 5m
+      - run: go vet ./...
+  admin:
+    name: Admin TypeScript and production build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: qiuqiu/admin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: qiuqiu/admin/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build
