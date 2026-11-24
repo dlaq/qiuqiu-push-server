@@ -52,6 +52,10 @@ func openStore(path string) (*Store, error) {
 		db.Close()
 		return nil, e
 	}
+	if _, e = db.Exec(compatibilitySchema); e != nil {
+		db.Close()
+		return nil, e
+	}
 	return &Store{db}, nil
 }
 func (s *Store) addUser(name, password, role string) (User, error) {

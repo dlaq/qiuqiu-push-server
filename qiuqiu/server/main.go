@@ -158,6 +158,26 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ip, _, _ := net.SplitHostPort(r.RemoteAddr)
+	if r.Method == "GET" && strings.HasPrefix(r.URL.Path, "/api/s/") {
+		w.Header().Set("Content-Security-Policy", "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'")
+		if s.cfg.AdminDir == "" {
+			http.NotFound(w, r)
+			return
+		}
+		http.ServeFile(w, r, filepath.Join(s.cfg.AdminDir, "index.html"))
+		return
+	}
+	if compatibilityPath(r) {
+		r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+		if !s.limit("compat:"+ip, 120) {
+			fail(w, r, &AppError{429, "rate_limited", "请求过于频繁"})
+			return
+		}
+		if e := s.compatibilityHTTP(w, r); e != nil {
+			fail(w, r, e)
+		}
+		return
+	}
 	if strings.HasPrefix(r.URL.Path, "/api/v1/messages/") {
 		if e := s.senderMessageHTTP(w, r); e != nil {
 			fail(w, r, e)
@@ -176,7 +196,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.legacyClientHTTP(w, r)
 		return
 	}
-	if r.URL.Path == "/api/v1/ws" || r.URL.Path == "/api/v1/device/ws" {
+	if r.URL.Path == "/api/v1/ws" || r.URL.Path == "/api/v1/device/ws" || r.URL.Path == "/ws" {
 		s.websocketHTTP(w, r)
 		return
 	}

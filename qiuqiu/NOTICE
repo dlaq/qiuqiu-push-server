@@ -3,3 +3,5 @@ Original repository URLs, versions and commits are recorded in UPSTREAM.json.
 Original copyright and license files remain in upstream/ntfy and android.
 No affiliation with Server酱, PushPlus, Bark, WxPusher, Google, Firebase or OPPO is implied.
 Outbound adapter coverage and legacy client WebSocket framing were independently implemented with reference to songquanpeng/message-pusher public API documentation (https://github.com/songquanpeng/message-pusher, MIT). No production availability of third-party services is implied.
+WxPusher numeric WebSocket receive framing was independently implemented with reference to the official wxpusher/wxpusher-desktop WsManager.ts at commit d0b310a74a47380d4eca30815558f7395fdeb24c. This is not a full replacement for its account/login APIs.
+QR image encoding uses github.com/skip2/go-qrcode (MIT, Copyright 2014 Tom Harwood), fixed at da1b6568686e. Its license is included in licenses/go-qrcode-LICENSE.

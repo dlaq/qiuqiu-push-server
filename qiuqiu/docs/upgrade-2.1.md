@@ -96,7 +96,47 @@ OneBot反向WS入口为`wss://push.example.com/api/v1/onebot/reverse/{通道ID}`
 
 已有GET/JSON/FORM、路径编码、中文、HTML清理、范围授权、撤销、多目标测试。新增Bark AES-CBC/GCM接收解密及`POST /push`的device_keys批量；新增WxPusher SPT凭证及simple-push/sptList/编码路径发送、GET topicId别名。批量逐项返回受理结果并去除重复凭证，不回显完整密钥；这是带安全扩展的响应，调用方需检查逐项状态。多个不同凭证指向同一设备时属于不同消息受理，不按内容去重。
 
-本次仍不能标记为“全部公开消息能力兼容”：PushPlus开放AccessKey的消息列表/状态/删除、WxPusher二维码订阅/内容删除、SC3完整公开接收协议仍需继续核实并实现；原平台账户、支付、会员、任意脚本预处理不在范围内。Bark iOS专用铃声库、徽标、临界音量、强制响铃和剪贴板行为不能由Android等价保证。完整ntfy原生能力使用ntfy入口；球球高级操作只提供HTTPS view/http。
+已补齐PushPlus开放AccessKey消息列表/状态/删除、WxPusher参数二维码/扫码UID/内容删除及旧状态查询停用响应，操作见下一节。PushPlus发送响应的`data`现在是官方短链码字符串（球球UUID）；额外的`message_id`保持便于统一追踪。
+
+本次仍不能标记为“全部公开消息能力兼容”：SC3 Bot公开上下行/回调、WxPusher订阅用户列表/移除/拉黑及上行回调、PushPlus其余消息相关的订阅/渠道管理能力仍需继续实现。原平台账户、支付、会员、任意脚本预处理不在范围内。Bark iOS专用铃声库、徽标、临界音量、强制响铃和剪贴板行为不能由Android等价保证。完整ntfy原生能力使用ntfy入口；球球高级操作只提供HTTPS view/http。
+
+## 消息查询、删除与二维码订阅
+
+PushPlus开放接口默认关闭。在「应用与密钥 → PushPlus消息查询与删除」选择本地PushPlus凭证并设置32–256字节secretKey。服务端只保存摘要。可配置安全IP/CIDR；这里检查Gateway直接对端，不信任可伪造的X-Forwarded-For。NPM/Cloudflare后需要限制真实客户端IP时，应在代理层配置。留空表示双重凭证验证，不表示已限制客户端IP。
+
+```sh
+# 以下均为占位值，替换为自己的本地凭证。不要把完整密钥写入公共日志。
+curl -A 'QiuQiuPush/2.1' 'https://push.example.com/api/common/openApi/getAccessKey' \
+  -H 'Content-Type: application/json' \
+  -d '{"token":"LOCAL_PUSHPLUS_TOKEN","secretKey":"YOUR_32_BYTE_OR_LONGER_SECRET_KEY"}'
+
+curl -A 'QiuQiuPush/2.1' 'https://push.example.com/api/open/message/list' \
+  -H 'access-key: YOUR_ACCESS_KEY' -H 'Content-Type: application/json' \
+  -d '{"current":1,"pageSize":20}'
+
+curl -A 'QiuQiuPush/2.1' 'https://push.example.com/api/open/message/sendMessageResult?shortCode=MESSAGE_UUID' \
+  -H 'access-key: YOUR_ACCESS_KEY'
+
+curl -A 'QiuQiuPush/2.1' -X DELETE 'https://push.example.com/api/open/message/deleteMessage?shortCode=MESSAGE_UUID' \
+  -H 'access-key: YOUR_ACCESS_KEY'
+```
+
+AccessKey有效期7200秒，刷新时旧AccessKey最多保留300秒重叠期；修改secretKey、关闭开放接口、撤销发送凭证或禁用用户立即使其不可用。只允许访问签发该AccessKey的同一发送凭证创建的消息，不读取同一用户其他应用的记录。每页最多50条。发送结果0/1/2/3分别为尚未开始/处理中/服务端流程成功/存在投递失败，扩展字段给出APP实际接收设备数，不能把2当作手机已显示。
+
+`GET /shortMessage/{UUID}`提供与官方短链用途一致的本地HTML落地页。UUID链接自身是访问能力，转发链接会允许别人查看内容。页面无脚本权限，HTML清理后展示，文本/Markdown保留安全原文。删除消息隐藏本凭证列表和落地页，保留管理审计、投递队列及已经到达手机的记录；不声称可以远程撤回通知。
+
+WxPusher的`DELETE /api/send/message?appToken=...&messageContentId=...`按同一凭证验证归属，只删除本地落地页内容。`GET /wxpusher/message/{UUID}`在删除前展示内容，删除后返回410。原平台已停用的`/api/send/query/status`、`/api/send/query/{messageId}`返回HTTP200、业务码1001及停用说明；球球真实状态继续使用认证的`/api/v1/messages/{UUID}`。
+
+```sh
+curl -A 'QiuQiuPush/2.1' 'https://push.example.com/api/fun/create/qrcode' \
+  -H 'Content-Type: application/json' \
+  -d '{"appToken":"LOCAL_APP_TOKEN","extra":"order-123","validTime":1800}'
+curl -A 'QiuQiuPush/2.1' 'https://push.example.com/api/fun/scan-qrcode-uid?code=YOUR_LOCAL_CODE'
+```
+
+二维码返回code、有效秒数expires、PNG图片url和订阅link；有效期1–2592000秒，每凭证最多1000个有效码。extra保存在服务器，最长64字符，不接受链接篡改。扫码或打开链接后先登录本地账户，再选择自己的已配对设备及已授权Topic确认订阅；已有直接设备授权可以直接确认。二维码不开放注册，不绑定他人设备，也不冒充微信二维码。返回UID为本地DEV_设备ID，可用在WxPusher uids中。扫码UID查询至少间隔10秒，退出扫码页面后停止。订阅码是敏感访问能力，不要公开其业务参数。
+
+WxPusher桌面端接收帧参考官方开源`WsManager.ts`提交`d0b310a74a47380d4eca30815558f7395fdeb24c`，增加`wss://push.example.com/ws?pushToken=LOCAL_DEVICE_API_TOKEN`（也支持Bearer）。使用独立设备配对凭证；不接受发送密钥或管理会话。收到202初始化，客户端101心跳对应201，推送帧20001含mid、title、summary、content等，203为认证错误。需要将本地设备模式设置为direct/auto。socket写入成功不自动生成手机回执；客户端需另行调用设备回执API。这是接收帧适配，尚未兼容原桌面端的云账户登录及完整REST接口，不能声称原桌面端改域名即可完整使用。
 
 官方资料：[message-pusher](https://github.com/songquanpeng/message-pusher/blob/master/docs/API.md)、[Bark API](https://github.com/Finb/bark-server/blob/master/docs/API_V2.md)、[Bark加密](https://github.com/Finb/Bark/blob/master/docs/encryption.md)、[WxPusher OpenAPI](https://wxpusher.zjiecode.com/docs/openapi.yaml)、[PushPlus开放接口](https://www.pushplus.plus/doc/guide/openApi.html)、[腾讯云API删除记录](https://intl.cloud.tencent.com/document/product/248/39297)。
 

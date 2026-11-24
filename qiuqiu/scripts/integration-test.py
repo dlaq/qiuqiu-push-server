@@ -86,10 +86,34 @@ assert any(x['stage']=='notification_submitted' for x in trace['events'])
 must('/api/v1/manage/devices/profile',{'id':paired[0]['device_id'],'name':'友好的手机名称','alias':'my-phone'},session,method='PATCH')
 alias=must('/api/v1/push',{'body':'别名目标','device_ids':['my-phone']},keys['native']['token'])
 assert must('/api/v1/messages/'+alias['message_id'],token=keys['native']['token'])['deliveries'][0]['device_name']=='友好的手机名称'
+# Public compatibility management preserves credential isolation and real state.
+secret_key=os.urandom(24).hex()
+must('/api/v1/manage/keys/access',{'id':keys['pushplus']['id'],'secret':secret_key,'enabled':True},session)
+access=must('/api/common/openApi/getAccessKey',{'token':keys['pushplus']['token'],'secretKey':secret_key})['data']['accessKey']
+headers={'access-key':access}
+listed=must('/api/open/message/list',{},headers=headers)['data']
+assert listed['total']==1
+short=listed['list'][0]['shortCode']
+state=must('/api/open/message/sendMessageResult?shortCode='+short,headers=headers)
+assert state['data']['status']==2 and state['extension']['received_devices']==0
+must('/api/open/message/deleteMessage?shortCode='+short,method='DELETE',headers=headers)
+assert request('/shortMessage/'+short)[0]==410
+assert must('/api/open/message/list',{},headers=headers)['data']['total']==0
+wx=next(m for m in messages if m['protocol']=='wxpusher')
+wx_content=must('/api/v1/manage/messages/'+wx['id'],token=session)['message']['message_content_id']
+must('/api/send/message?appToken='+keys['wxpusher']['token']+'&messageContentId='+str(wx_content),method='DELETE')
+assert request('/wxpusher/message/'+wx['id'])[0]==410
+retired=must('/api/send/query/status?sendRecordId=undefined')
+assert retired['code']==1001 and not retired['success']
+qr=must('/api/fun/create/qrcode',{'appToken':keys['wxpusher']['token'],'extra':'integration-extra','validTime':1800})['data']
+claim={'code':qr['code'],'device_id':paired[1]['device_id'],'topic_ids':[topic['id']]}
+assert request('/api/v1/manage/subscriptions/claim',claim)[0]==401
+must('/api/v1/manage/subscriptions/claim',claim,session)
+assert must('/api/fun/scan-qrcode-uid?code='+qr['code'])['data']==paired[1]['device_id']
 # Revocation applies in ntfy, not only in the gateway's database.
 must('/api/v1/manage/keys',{'id':native['id'],'disabled':True},session,method='PATCH')
 assert request('/'+group,'revoked',native['token'],headers={'Host':'ntfy.localhost'})[0]==401
 must('/api/v1/manage/devices',{'id':paired[0]['device_id'],'disabled':True},session,method='PATCH')
 assert request('/'+paired[0]['topic']+'/json?poll=1',token=paired[0]['ntfy_token'],headers={'Host':'ntfy.localhost'},raw=True)[0]==401
-result={'result':'passed','protocols':7,'devices':2,'checks':['one-time pairing','all adapters publish via real ntfy','private cache authentication','cross-device isolation','native group fanout','native actions preserved','native attachment accessible','long Chinese body preserved','business metadata','authenticated phone receipts','persistent delivery events','friendly device alias','sender status scope','upstream key and device revocation'],'firebase':'not configured; no cloud delivery claimed','test_user':name}
+result={'result':'passed','protocols':7,'devices':2,'checks':['one-time pairing','all adapters publish via real ntfy','private cache authentication','cross-device isolation','native group fanout','native actions preserved','native attachment accessible','long Chinese body preserved','business metadata','authenticated phone receipts','persistent delivery events','friendly device alias','sender status scope','PushPlus AccessKey and scoped lifecycle','WxPusher landing deletion','deprecated query response','authenticated QR subscription','upstream key and device revocation'],'firebase':'not configured; no cloud delivery claimed','test_user':name}
 print(json.dumps(result,ensure_ascii=False,indent=2))

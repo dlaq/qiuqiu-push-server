@@ -14,6 +14,8 @@ FROM alpine:3.23
 RUN apk add --no-cache ca-certificates tzdata && mkdir /data
 COPY --from=build /gateway /usr/local/bin/qiuqiu-gateway
 COPY --from=web /src/dist /app/admin
+COPY licenses/ /app/licenses/
+COPY NOTICE /app/NOTICE
 ENV QQ_ADMIN_DIR=/app/admin QQ_DATABASE=/data/qiuqiu.db
 EXPOSE 8080
 ENTRYPOINT ["qiuqiu-gateway"]

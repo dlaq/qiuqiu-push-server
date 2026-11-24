@@ -355,7 +355,7 @@ func success(w http.ResponseWriter, m *Message) {
 	case "serverchan", "sc3", "pushbear":
 		respond(w, 200, map[string]any{"code": 0, "message": "成功", "data": map[string]any{"id": m.ID}, "warnings": m.Warnings})
 	case "pushplus":
-		respond(w, 200, map[string]any{"code": 200, "msg": "请求成功", "data": map[string]string{"messageId": m.ID}, "warnings": m.Warnings})
+		respond(w, 200, map[string]any{"code": 200, "msg": "请求成功", "data": m.ID, "message_id": m.ID, "warnings": m.Warnings})
 	case "bark":
 		respond(w, 200, map[string]any{"code": 200, "message": "success", "timestamp": m.CreatedAt, "data": map[string]string{"message_id": m.ID}, "warnings": m.Warnings})
 	case "wxpusher":

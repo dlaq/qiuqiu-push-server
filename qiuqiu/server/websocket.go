@@ -40,6 +40,20 @@ func (s *Server) websocketHTTP(w http.ResponseWriter, r *http.Request) {
 	}, Handler: func(ws *websocket.Conn) {
 		defer ws.Close()
 		ws.MaxPayloadBytes = 1 << 20
+		if r.URL.Path == "/ws" {
+			token := r.URL.Query().Get("pushToken")
+			if h := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer "); h != r.Header.Get("Authorization") {
+				if token != "" && token != h {
+					return
+				}
+				token = h
+			}
+			if len(token) > 256 {
+				return
+			}
+			s.deviceSocketFormat(ws, token, true)
+			return
+		}
 		_ = ws.SetReadDeadline(time.Now().Add(10 * time.Second))
 		var auth struct {
 			Token string `json:"token"`
@@ -119,7 +133,7 @@ func (s *Server) publisherSocket(ws *websocket.Conn, token string) {
 
 func directWire(m Message, topic string) params {
 	meta := params{"message_id": m.ID, "business_type": m.Business, "business_name": m.BusinessName, "icon": m.Icon, "sound": m.Sound, "content_type": m.ContentType, "source_protocol": m.Protocol, "group": m.Group}
-	wire := params{"id": "direct_" + m.ID, "event": "message", "topic": topic, "time": m.CreatedAt, "sequence_id": first(m.Sequence, m.ID), "title": m.Title, "message": m.Body, "priority": m.Priority, "tags": m.Tags, "click": m.Click, "qiuqiu": meta}
+	wire := params{"id": "direct_" + m.ID, "event": "message", "topic": topic, "time": m.CreatedAt, "sequence_id": first(m.Sequence, m.ID), "title": m.Title, "message": m.Body, "priority": m.Priority, "tags": m.Tags, "click": m.Click, "qiuqiu": meta, "message_content_id": m.ContentID}
 	if m.IconURL != "" {
 		wire["icon"] = m.IconURL
 	}
@@ -135,9 +149,41 @@ func directWire(m Message, topic string) params {
 }
 
 func (s *Server) deviceSocket(ws *websocket.Conn, token string) {
+	s.deviceSocketFormat(ws, token, false)
+}
+
+// Implements the documented open-source desktop client's numeric receive
+// frames. Local pairing provides pushToken; anonymous device creation and the
+// original service's login endpoints are intentionally not impersonated.
+func wxSocketFrame(v any, token string) any {
+	p, ok := v.(params)
+	if !ok {
+		return v
+	}
+	now := time.Now().UnixMilli()
+	switch p.str("event") {
+	case "authenticated":
+		return params{"msgType": 202, "createTime": now, "pushToken": token}
+	case "ping":
+		return params{"msgType": 201, "createTime": now}
+	case "message":
+		return params{"msgType": 20001, "createTime": now, "mid": p["message_content_id"], "title": p["title"], "name": "球球推送", "summary": p["message"], "url": p["click"], "sourceUrl": p["click"], "content": p["message"], "qiuqiu": p["qiuqiu"]}
+	default:
+		if p.str("error") != "" {
+			return params{"msgType": 203, "createTime": now, "msg": p["error"]}
+		}
+		return p
+	}
+}
+
+func (s *Server) deviceSocketFormat(ws *websocket.Conn, token string, wx bool) {
 	d, e := s.deviceAuth(token)
 	if e != nil {
-		_ = websocket.JSON.Send(ws, params{"error": "unauthorized"})
+		frame := any(params{"error": "unauthorized"})
+		if wx {
+			frame = wxSocketFrame(frame, token)
+		}
+		_ = websocket.JSON.Send(ws, frame)
 		return
 	}
 	client := &directClient{Send: make(chan directPacket, 32), Closed: make(chan struct{})}
@@ -161,10 +207,20 @@ func (s *Server) deviceSocket(ws *websocket.Conn, token string) {
 			if websocket.JSON.Receive(ws, &frame) != nil {
 				return
 			}
+			if wx && frame.num("msgType") == 101 {
+				select {
+				case client.Send <- directPacket{Payload: params{"event": "ping"}, Done: make(chan error, 1)}:
+				default:
+					return
+				}
+			}
 		}
 	}()
 	send := func(v any) error {
 		_ = ws.SetWriteDeadline(time.Now().Add(10 * time.Second))
+		if wx {
+			v = wxSocketFrame(v, token)
+		}
 		return websocket.JSON.Send(ws, v)
 	}
 	if send(params{"event": "authenticated", "device_id": d.ID}) != nil {
