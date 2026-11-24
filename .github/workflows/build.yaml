@@ -38,7 +38,11 @@ jobs:
         if: github.repository != 'binwiederhier/ntfy'
         run: make web docs cli-linux-server
       - name: Print build results and checksums
+        if: github.repository == 'binwiederhier/ntfy'
         run: make cli-build-results
+      - name: Print native build checksum
+        if: github.repository != 'binwiederhier/ntfy'
+        run: sha256sum dist/ntfy_linux_server/ntfy
   docker-build:
     # Dockerfile-build is not used in releases, so build it here to catch it going stale (see #1962)
     runs-on: ubuntu-24.04
