@@ -6,7 +6,7 @@ type Row = Record<string,any>;
 const origin=window.location.origin;
 const token=ref(sessionStorage.getItem('qq_session')||'');
 const user=ref<Row|null>(null),page=ref('overview'),busy=ref(false),error=ref(''),notice=ref(''),reveal=ref<Row|null>(null);
-const resources=['devices','topics','apps','keys','messages','deliveries','stats','audit','bindings','policies'];
+const resources=['devices','topics','apps','keys','messages','deliveries','stats','audit','bindings','policies','channels'];
 const data=ref<Record<string,Row[]>>(Object.fromEntries([...resources,'users'].map(k=>[k,[]])));
 const nav=[['overview','总览','◉'],['devices','设备与订阅','▣'],['channels','通道与切换','⇄'],['keys','应用与密钥','⌘'],['messages','消息记录','▤'],['users','用户管理','♧'],['api','接口指南','⟐']];
 const name=ref(''),password=ref(''),newName=ref(''),newPassword=ref(''),newRole=ref('user');
@@ -50,7 +50,7 @@ onUnmounted(()=>{if(traceTimer)clearInterval(traceTimer)});
  <section v-if="page==='overview'">
   <div class="hero"><div><span class="pill">私有推送工作空间</span><h2>每一条重要消息，<br>都有自己的声音。</h2><p>统一管理设备、业务主题与推送凭证。<br>通过自己的服务器，将通知送到球球推送。</p><button class="primary" @click="page='devices'">管理我的设备</button></div><img src="/brand.png" alt="微笑毛线球"></div>
   <div class="metrics"><article><span>已绑定设备</span><strong>{{activeDevices.length}}</strong><small>独立授权，随时撤销</small></article><article><span>业务主题</span><strong>{{data.topics.length}}</strong><small>按设备分组投递</small></article><article><span>有效凭证</span><strong>{{data.keys.filter(k=>!k.disabled).length}}</strong><small>六类 API，本地签发</small></article><article><span>受理请求</span><strong>{{data.stats.reduce((n,s)=>n+s.requests,0)}}</strong><small>统计来自本地记录</small></article></div>
-  <TestPanel :token="token" :user-id="user.id" :devices="activeDevices" :topics="data.topics" :policies="data.policies" @sent="load" />
+  <TestPanel :token="token" :user-id="user.id" :devices="activeDevices" :topics="data.topics" :policies="data.policies" :channels="data.channels" @sent="load" />
  </section>
  <ChannelPanel v-if="page==='channels'" :token="token" @changed="action(load)" />
  <section v-if="page==='devices'">
